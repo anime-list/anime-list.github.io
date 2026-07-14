@@ -701,10 +701,10 @@
             document.getElementById('animeProfileModal').classList.add('active');
 
             try {
-                const resDetails = await fetch(`http://localhost:3000/api/anime/${animeId}`);
+                const resDetails = await fetch(`https://anime-list-backend-ff9i.onrender.com/api/anime/${animeId}`);
                 const details = await resDetails.json();
 
-                const resRoles = await fetch(`http://localhost:3000/api/anime/${animeId}/roles`);
+                const resRoles = await fetch(`https://anime-list-backend-ff9i.onrender.com/api/anime/${animeId}/roles`);
                 const roles = await resRoles.json();
 
                 const finalTitle = details.russian || details.name;
