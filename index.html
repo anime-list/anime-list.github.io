@@ -280,7 +280,6 @@
     <header>
         <div class="logo-area">
             <span class="logo-text">🌸 AfterGlow Space</span>
-            <!-- Бейдж версии удален отсюда для предотвращения наложения элементов -->
         </div>
         <nav class="top-nav">
             <div class="nav-tab active" id="btn-tab-dash" onclick="switchView('dash')">Главная</div>
@@ -320,7 +319,7 @@
         <div id="view-dash" class="tab-view active">
             <div class="welcome-banner">
                 <h1 id="dynamicGreeting">Добро пожаловать!</h1>
-                <p>Версия v1.7.0 переведена на постоянное хранение данных (localStorage) и прямое подключение к аниме-реестру.</p>
+                <p>Версия v1.7.0 переведена на постоянное хранение данных и прямое подключение к аниме-реестру.</p>
             </div>
             <div class="dashboard-row">
                 <div class="stats-grid">
@@ -334,7 +333,7 @@
                     <div class="featured-info">
                         <h3 style="margin-bottom: 5px;">Поиск по всей базе планеты</h3>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Онлайн дата-майнинг</p>
-                        <p style="font-size: 14px; line-height: 1.5;">Перейдите во вкладку «База тайтлов» и введите любое название, чтобы загрузить постеры из сети.</p>
+                        <p style="font-size: 14px; line-height: 1.5;">Перейдите во вкладку «Тайтлы» и введите любое название, чтобы загрузить постеры из сети.</p>
                     </div>
                 </div>
             </div>
@@ -424,13 +423,13 @@
                         <div class="form-group"><label>Статус</label><input type="text" id="inputStatus" class="control-input"></div>
                         <div class="form-group"><label>Любимый Персонаж</label><input type="text" id="inputChar" class="control-input"></div>
                         
-                        <!-- НОВЫЙ ВЫБОР ПОЛА -->
+                        <!-- ВЫБОР ПОЛА -->
                         <div class="form-group">
                             <label>Пол</label>
                             <select id="inputGender" class="control-input" style="background: var(--bg-card); color: var(--text-main); font-weight: 600;">
                                 <option value="">Не указан</option>
-                                <option value="Мальчик">Мальчик 👦</option>
-                                <option value="Девочка">Девочка 👧</option>
+                                <option value="Мальчик">Мальчик </option>
+                                <option value="Девочка">Девочка </option>
                             </select>
                         </div>
                         
@@ -482,7 +481,7 @@
     <script>
         // НАСТРОЙКА БЭКЕНДА И ДЕФОЛТНОЙ АВАТАРКИ
         const BACKEND_URL = "https://anime-list-backend-ff9i.onrender.com";
-        const DEFAULT_AVATAR = "images/user_avatar"; // Укажи тут путь к своей скачанной картинке, если хочешь (например: "images/default.png")
+        const DEFAULT_AVATAR = "user_avatar.png"; 
 
         let searchTimeout;
         let showNsfwContent = false;
@@ -533,12 +532,11 @@
                     localStorage.removeItem('glow_avatar');
                 }
                 localStorage.setItem('glow_status', 'Пользователь AfterGlow 🟢');
-                localStorage.setItem('glow_logged_in', 'true'); // Флаг авторизации
+                localStorage.setItem('glow_logged_in', 'true'); 
                 
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
 
-            // Чистый запуск для НОВЫХ пользователей
             const hasSavedData = localStorage.getItem('glow_name') !== null;
             
             const currentName = hasSavedData ? localStorage.getItem('glow_name') : "Гость";
@@ -547,20 +545,16 @@
             const currentGender = localStorage.getItem('glow_gender') !== null ? localStorage.getItem('glow_gender') : "Не указан";
             const currentAvatar = localStorage.getItem('glow_avatar') || DEFAULT_AVATAR;
 
-            // Наполнение полей в настройках
             document.getElementById('inputName').value = currentName;
             document.getElementById('inputStatus').value = currentStatus;
             document.getElementById('inputChar').value = currentChar === "Не выбран" ? "" : currentChar;
             document.getElementById('inputGender').value = currentGender === "Не указан" ? "" : currentGender;
             
-            // Отрисовка аватарки в шапке
             document.getElementById('hdrAvatar').src = currentAvatar;
 
-            // Загрузка тумблера 18+
             showNsfwContent = localStorage.getItem('glow_nsfw') === 'true';
             document.getElementById('nsfwToggle').checked = showNsfwContent;
 
-            // Применение кастомизации темы
             applyTheme(localStorage.getItem('glow_theme') || 'sakura', false);
             applyGeometry(localStorage.getItem('glow_geometry') || 'rounded', false);
             applyFontSize(localStorage.getItem('glow_font') || 'normal', false);
@@ -571,13 +565,9 @@
                 if (overcastBtn) overcastBtn.innerText = "☁️ : ВКЛ";
             }
 
-            // Обновление интерфейса входа/выхода
             updateLoginUI();
-
-            // Синхронизация текста
             syncUIText();
 
-            // Загрузка сохраненных постов стены
             const savedPosts = JSON.parse(localStorage.getItem('glow_posts')) || [];
             const container = document.getElementById('postFeedContainer');
             container.innerHTML = "";
@@ -611,7 +601,6 @@
             document.getElementById('statPostCount').innerText = savedPosts.length;
         }
 
-        // Прячем кнопки входа и показываем кнопку Выйти
         function updateLoginUI() {
             const isLogged = localStorage.getItem('glow_logged_in') === 'true' || localStorage.getItem('glow_name') !== null;
             const userName = localStorage.getItem('glow_name') || "Гость";
@@ -631,7 +620,6 @@
             }
         }
 
-        // Выход из аккаунта (очистка)
         function logout() {
             localStorage.removeItem('glow_logged_in');
             localStorage.removeItem('glow_name');
@@ -644,7 +632,6 @@
             triggerToast("Вы успешно вышли из аккаунта!");
         }
 
-        // Ручной вход
         function promptManualLogin() {
             const name = prompt("Введите ваш никнейм:", localStorage.getItem('glow_name') || "");
             if (name) {
@@ -686,7 +673,6 @@
             localStorage.setItem('glow_char', charVal);
             localStorage.setItem('glow_gender', genderVal);
             
-            // Если гость сменил ник с дефолтного — считаем его авторизованным
             if (nameVal !== "Гость") {
                 localStorage.setItem('glow_logged_in', 'true');
             }
@@ -714,7 +700,7 @@
         }
 
         // ==========================================================================
-        // SHIKIMORI LIVE ENGINE (Работа через облачный сервер Render)
+        // SHIKIMORI LIVE ENGINE (Прямые запросы к API Shikimori)
         // ==========================================================================
         function updateGenreFilterList() {
             const genreSelect = document.getElementById('filterGenre');
@@ -750,8 +736,8 @@
             const format = document.getElementById('filterFormat').value;
             const genre = document.getElementById('filterGenre').value;
 
-            // Изменено на постоянный URL бэкенда Render
-            let url = `${BACKEND_URL}/api/anime?limit=24&order=popularity`;
+            // Изменено на прямой запрос к официальному API Шикимори
+            let url = `https://shikimori.one/api/animes?limit=24&order=popularity`;
             if (query) url += `&search=${encodeURIComponent(query)}`;
             if (format) url += `&kind=${format}`;
             if (year) url += `&season=${year}`;
@@ -835,11 +821,11 @@
             document.getElementById('animeProfileModal').classList.add('active');
 
             try {
-                // Все запросы переведены на сервер Render
-                const resDetails = await fetch(`${BACKEND_URL}/api/anime/${animeId}`);
+                // Изменено на прямые запросы к API Шикимори
+                const resDetails = await fetch(`https://shikimori.one/api/animes/${animeId}`);
                 const details = await resDetails.json();
 
-                const resRoles = await fetch(`${BACKEND_URL}/api/anime/${animeId}/roles`);
+                const resRoles = await fetch(`https://shikimori.one/api/animes/${animeId}/roles`);
                 const roles = await resRoles.json();
 
                 const finalTitle = details.russian || details.name;
