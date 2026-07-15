@@ -10,7 +10,6 @@
            ========================================================================== */
         
         :root {
-            /* ... твои стили ... */
             --banner-bg: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
             --banner-text: #3a3028; /* Темный текст для светлой темы */
             --modal-overlay: rgba(58, 48, 40, 0.4);
@@ -18,14 +17,12 @@
         }
         
         [data-theme="sunset"] {
-            /* ... твои стили ... */
             --banner-bg: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
             --banner-text: #3a322c; /* Темный текст для заката */
             --modal-overlay: rgba(58, 50, 44, 0.4);
         }
         
         [data-theme="midnight"] {
-            /* ... твои стили ... */
             --banner-bg: linear-gradient(135deg, #2e3556 0%, #1e2235 100%);
             --banner-text: #e1e2e7; /* Светлый текст для темной темы! */
             --modal-overlay: rgba(15, 17, 26, 0.7);
@@ -95,8 +92,6 @@
         header { background: var(--bg-nav); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; height: 85px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); }
         .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-text { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: -0.5px; }
-        .version-badge { font-size: 11px; background: rgba(0,0,0,0.05); padding: 3px 8px; border-radius: 10px; color: var(--text-muted); font-weight: 700; }
-        [data-theme="midnight"] .version-badge { background: rgba(255,255,255,0.08); }
 
         .top-nav { display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.03); padding: 6px; border-radius: var(--radius-inner); }
         [data-theme="midnight"] .top-nav { background: rgba(255,255,255,0.03); }
@@ -165,16 +160,24 @@
             background: var(--banner-bg); 
             border-radius: var(--radius-main); 
             padding: 40px; 
-            color: var(--banner-text); /* Было: color: #3a3028; */
+            color: var(--banner-text);
             margin-bottom: 35px; 
             box-shadow: var(--shadow); 
         }
         .dashboard-row { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
         @media (max-width: 768px) { .dashboard-row { grid-template-columns: 1fr; } }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        /* КРАСИВЫЙ СЕТОЧНЫЙ ДИЗАЙН СТАТИСТИКИ (3 колонки на десктопе) */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        @media (max-width: 600px) { 
+            .stats-grid { grid-template-columns: 1fr; } 
+            .stats-grid .stat-box { grid-column: auto !important; }
+        }
+        
         .stat-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); padding: 20px; text-align: center; box-shadow: var(--shadow); }
-        .stat-box h4 { font-size: 28px; color: var(--accent); font-weight: 800; margin-bottom: 5px; }
-        .stat-box p { font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+        .stat-box h4 { font-size: 24px; color: var(--accent); font-weight: 800; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .stat-box p { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+        
         .featured-card { display: flex; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; }
         .featured-img-stub { width: 130px; background: linear-gradient(45deg, var(--accent), var(--accent-hover)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; text-align: center; font-size: 16px; padding: 15px; }
         .featured-info { padding: 20px; flex: 1; }
@@ -199,6 +202,27 @@
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
         .control-input { width: 100%; padding: 12px 18px; border: 1px solid var(--border); border-radius: var(--radius-inner); background: var(--bg-card); color: var(--text-main); outline: none; }
+        
+        /* СТИЛЬ КНОПКИ ЗАГРУЗКИ АВАТАРКИ */
+        .upload-trigger {
+            display: inline-block;
+            padding: 11px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            font-weight: 700;
+            border-radius: var(--radius-inner);
+            cursor: pointer;
+            margin-top: 6px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .upload-trigger:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
         .option-group { display: flex; gap: 8px; margin-top: 8px; }
         .opt-btn { flex: 1; padding: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-weight: 600; border-radius: var(--radius-inner); cursor: pointer; }
         .opt-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
@@ -256,7 +280,7 @@
     <header>
         <div class="logo-area">
             <span class="logo-text">🌸 AfterGlow Space</span>
-            <span class="version-badge">v1.7.0 Live</span>
+            <!-- Бейдж версии удален отсюда для предотвращения наложения элементов -->
         </div>
         <nav class="top-nav">
             <div class="nav-tab active" id="btn-tab-dash" onclick="switchView('dash')">Главная</div>
@@ -266,20 +290,21 @@
             <div class="nav-tab" id="btn-tab-config" onclick="switchView('config')">Настройки</div>
         </nav>
         <div class="header-user-corner">
-            <!-- КНОПКА TELEGRAM (Замени YOUR_BOT_USERNAME на своего бота) -->
-           <!-- Было: data-auth-url="http://localhost:3000/api/auth/telegram" -->
-                <!-- Надо сделать: -->
-                <div id="tg-login-container" style="margin-right: 5px;">
-                    <script async 
-                            src="https://telegram.org/js/telegram-widget.js?22" 
-                            data-telegram-login="afterglow_log_bot" 
-                            data-size="small" 
-                            data-auth-url="https://anime-list-backend-ff9i.onrender.com/api/auth/telegram" 
-                            data-request-access="write">
-                    </script>
-                </div>
-            <!-- Резервный вход на случай блокировок рекламы -->
-            <button class="btn-action" style="padding: 6px 12px; font-size: 12px; margin-right: 10px;" onclick="promptManualLogin()">Войти</button>
+            <!-- КНОПКА TELEGRAM -->
+            <div id="tg-login-container" style="margin-right: 5px;">
+                <script async 
+                        src="https://telegram.org/js/telegram-widget.js?22" 
+                        data-telegram-login="afterglow_log_bot" 
+                        data-size="small" 
+                        data-auth-url="https://anime-list-backend-ff9i.onrender.com/api/auth/telegram" 
+                        data-request-access="write">
+                </script>
+            </div>
+            <!-- Резервный вход -->
+            <button class="btn-action" id="manual-login-btn" style="padding: 6px 12px; font-size: 12px; margin-right: 10px;" onclick="promptManualLogin()">Войти</button>
+            
+            <!-- Кнопка Выхода (скрыта по умолчанию) -->
+            <button class="btn-action" id="logout-btn" style="padding: 6px 12px; font-size: 12px; margin-right: 10px; background: var(--badge-nsfw); display: none;" onclick="logout()">Выйти</button>
 
             <img src="" alt="Ава" class="corner-avatar" id="hdrAvatar">
             <div class="corner-info">
@@ -300,7 +325,8 @@
             <div class="dashboard-row">
                 <div class="stats-grid">
                     <div class="stat-box"><h4 id="statPostCount">0</h4><p>Публикаций</p></div>
-                    <div class="stat-box"><h4 id="statFavChar">Не указан</h4><p>Персонаж</p></div>
+                    <div class="stat-box"><h4 id="statFavChar">Не выбран</h4><p>Персонаж</p></div>
+                    <div class="stat-box"><h4 id="statGender">Не выбран</h4><p>Пол</p></div>
                     <div class="stat-box" style="grid-column: 1 / -1;"><h4 style="font-size: 15px; color: var(--text-main);" id="statStatus">Загрузка...</h4><p>Текущий статус</p></div>
                 </div>
                 <div class="featured-card" onclick="switchView('hub')">
@@ -387,7 +413,7 @@
             </div>
         </div>
 
-        <!-- РАЗДЕЛ 5: НАСТРОЙКИ (ПЕРСИСТЕНТНЫЕ) -->
+        <!-- РАЗДЕЛ 5: НАСТРОЙКИ -->
         <div id="view-config" class="tab-view">
             <div class="glass-panel">
                 <h2 class="panel-title">⚙️ Настройки и Память Хаба</h2>
@@ -397,7 +423,22 @@
                         <div class="form-group"><label>Никнейм</label><input type="text" id="inputName" class="control-input"></div>
                         <div class="form-group"><label>Статус</label><input type="text" id="inputStatus" class="control-input"></div>
                         <div class="form-group"><label>Любимый Персонаж</label><input type="text" id="inputChar" class="control-input"></div>
-                        <div class="form-group"><label>Сменить фото</label><br><label for="uploadFile" class="upload-trigger">📁 Загрузить картинку</label><input type="file" id="uploadFile" accept="image/*" style="display:none;" onchange="executeAvatarSync()"></div>
+                        
+                        <!-- НОВЫЙ ВЫБОР ПОЛА -->
+                        <div class="form-group">
+                            <label>Пол</label>
+                            <select id="inputGender" class="control-input" style="background: var(--bg-card); color: var(--text-main); font-weight: 600;">
+                                <option value="">Не указан</option>
+                                <option value="Мальчик">Мальчик 👦</option>
+                                <option value="Девочка">Девочка 👧</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Сменить фото</label><br>
+                            <label for="uploadFile" class="upload-trigger">📁 Загрузить картинку</label>
+                            <input type="file" id="uploadFile" accept="image/*" style="display:none;" onchange="executeAvatarSync()">
+                        </div>
                         <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="saveProfileChanges()">Сохранить изменения</button>
                     </div>
                     
@@ -439,10 +480,13 @@
 
     <!-- ЯДРО ОБРАБОТКИ ДАННЫХ -->
     <script>
+        // НАСТРОЙКА БЭКЕНДА И ДЕФОЛТНОЙ АВАТАРКИ
+        const BACKEND_URL = "https://anime-list-backend-ff9i.onrender.com";
+        const DEFAULT_AVATAR = "images/user_avatar"; // Укажи тут путь к своей скачанной картинке, если хочешь (например: "images/default.png")
+
         let searchTimeout;
         let showNsfwContent = false;
 
-        // Жанры с ID из базы API Shikimori
         const baseGenres = [
             { id: 'all', name: 'Все жанры' },
             { id: '1', name: 'Экшен' },
@@ -458,25 +502,25 @@
             { id: '34', name: 'Юри' }
         ];
 
-        // Инициализация при загрузке страницы
         window.onload = function() {
             initLocalStorageData();
             updateGenreFilterList();
             fetchAnimeFromAPI();
             
-            // Настройка приветствия
+            // Настройка динамического приветствия по имени
             const hour = new Date().getHours();
             const textNode = document.getElementById('dynamicGreeting');
-            if (hour >= 5 && hour < 12) textNode.innerText = "Доброе утро, Создатель хаба! 🌅";
-            else if (hour >= 12 && hour < 18) textNode.innerText = "Добрый день! AfterGlow Space на связи ☀️";
-            else textNode.innerText = "Лампового вечера! Время смотреть онгоинги 🌙";
+            const userName = localStorage.getItem('glow_name') || "Гость";
+            
+            if (hour >= 5 && hour < 12) textNode.innerText = `Доброе утро, ${userName}! 🌅`;
+            else if (hour >= 12 && hour < 18) textNode.innerText = `Добрый день! ${userName} на связи ☀️`;
+            else textNode.innerText = `Лампового вечера, ${userName}! Время смотреть онгоинги 🌙`;
         };
 
         // ==========================================================================
-        // LOCAL STORAGE ENGINE (Сохранение настроек навсегда)
+        // LOCAL STORAGE ENGINE
         // ==========================================================================
         function initLocalStorageData() {
-            // Улавливаем авторизационный редирект от Telegram
             const urlParams = new URLSearchParams(window.location.search);
             const tgName = urlParams.get('username');
             const tgAvatar = urlParams.get('avatar');
@@ -489,36 +533,48 @@
                     localStorage.removeItem('glow_avatar');
                 }
                 localStorage.setItem('glow_status', 'Пользователь AfterGlow 🟢');
+                localStorage.setItem('glow_logged_in', 'true'); // Флаг авторизации
                 
-                // Стираем параметры из адресной строки без перезагрузки
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
 
-            // Загрузка текстовых данных профиля
-            document.getElementById('inputName').value = localStorage.getItem('glow_name') || "Миямура семпай";
-            document.getElementById('inputStatus').value = localStorage.getItem('glow_status') || "Создатель Хаба";
-            document.getElementById('inputChar').value = localStorage.getItem('glow_char') || "Хори Кёко";
+            // Чистый запуск для НОВЫХ пользователей
+            const hasSavedData = localStorage.getItem('glow_name') !== null;
             
-            // Загрузка аватарки
-            const savedAvatar = localStorage.getItem('glow_avatar');
-            const defaultAvatar = "https://via.placeholder.com/150/f3a3b2/ffffff?text=User";
-            document.getElementById('hdrAvatar').src = savedAvatar || defaultAvatar;
+            const currentName = hasSavedData ? localStorage.getItem('glow_name') : "Гость";
+            const currentStatus = localStorage.getItem('glow_status') !== null ? localStorage.getItem('glow_status') : "Новый пользователь";
+            const currentChar = localStorage.getItem('glow_char') !== null ? localStorage.getItem('glow_char') : "Не выбран";
+            const currentGender = localStorage.getItem('glow_gender') !== null ? localStorage.getItem('glow_gender') : "Не указан";
+            const currentAvatar = localStorage.getItem('glow_avatar') || DEFAULT_AVATAR;
+
+            // Наполнение полей в настройках
+            document.getElementById('inputName').value = currentName;
+            document.getElementById('inputStatus').value = currentStatus;
+            document.getElementById('inputChar').value = currentChar === "Не выбран" ? "" : currentChar;
+            document.getElementById('inputGender').value = currentGender === "Не указан" ? "" : currentGender;
+            
+            // Отрисовка аватарки в шапке
+            document.getElementById('hdrAvatar').src = currentAvatar;
 
             // Загрузка тумблера 18+
             showNsfwContent = localStorage.getItem('glow_nsfw') === 'true';
             document.getElementById('nsfwToggle').checked = showNsfwContent;
 
-            // Применение кастомизации
+            // Применение кастомизации темы
             applyTheme(localStorage.getItem('glow_theme') || 'sakura', false);
             applyGeometry(localStorage.getItem('glow_geometry') || 'rounded', false);
             applyFontSize(localStorage.getItem('glow_font') || 'normal', false);
             
             if (localStorage.getItem('glow_overcast') === 'true') {
                 document.body.classList.add('overcast-mode');
-                document.getElementById('overcastToggle').innerText = "☁️ Пасмурный режим: ВКЛ";
+                const overcastBtn = document.getElementById('overcastToggle');
+                if (overcastBtn) overcastBtn.innerText = "☁️ : ВКЛ";
             }
 
-            // Синхронизация UI элементов шапки и дашборда
+            // Обновление интерфейса входа/выхода
+            updateLoginUI();
+
+            // Синхронизация текста
             syncUIText();
 
             // Загрузка сохраненных постов стены
@@ -530,8 +586,8 @@
                 container.innerHTML = `
                     <div class="user-post" id="sysNoticePost">
                         <div class="post-header">
-                            <img src="${document.getElementById('hdrAvatar').src}" alt="Ава" class="post-avatar">
-                            <div class="post-meta"><h5>${document.getElementById('inputName').value}</h5><span>Система</span></div>
+                            <img src="${currentAvatar}" alt="Ава" class="post-avatar">
+                            <div class="post-meta"><h5>${currentName}</h5><span>Система</span></div>
                         </div>
                         <div class="post-body">Стена пуста. Подключение к серверам Shikimori настроено успешно. Все данные теперь сохраняются при перезагрузке!</div>
                         <div class="post-actions"><button class="like-btn" onclick="handleLikeClick(this)">❤️ Лайкнуть (<span class="like-counter">0</span>)</button></div>
@@ -543,7 +599,7 @@
                     postEl.style.marginTop = "20px";
                     postEl.innerHTML = `
                         <div class="post-header">
-                            <img src="${p.avatar || defaultAvatar}" alt="Ава" class="post-avatar">
+                            <img src="${p.avatar || DEFAULT_AVATAR}" alt="Ава" class="post-avatar">
                             <div class="post-meta"><h5>${p.author}</h5><span>${p.time}</span></div>
                         </div>
                         <div class="post-body">${p.text}</div>
@@ -552,15 +608,49 @@
                     container.appendChild(postEl);
                 });
             }
-            document.getElementById('statPostCount').innerText = savedPosts.length || 1;
+            document.getElementById('statPostCount').innerText = savedPosts.length;
         }
 
-        // РУЧНОЙ ВХОД ДЛЯ ОБХОДА БЛОКИРОВЩИКОВ РЕКЛАМЫ
+        // Прячем кнопки входа и показываем кнопку Выйти
+        function updateLoginUI() {
+            const isLogged = localStorage.getItem('glow_logged_in') === 'true' || localStorage.getItem('glow_name') !== null;
+            const userName = localStorage.getItem('glow_name') || "Гость";
+
+            const tgWidget = document.getElementById('tg-login-container');
+            const manualBtn = document.getElementById('manual-login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            if (isLogged && userName !== "Гость") {
+                if (tgWidget) tgWidget.style.display = 'none';
+                if (manualBtn) manualBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+            } else {
+                if (tgWidget) tgWidget.style.display = 'inline-block';
+                if (manualBtn) manualBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+            }
+        }
+
+        // Выход из аккаунта (очистка)
+        function logout() {
+            localStorage.removeItem('glow_logged_in');
+            localStorage.removeItem('glow_name');
+            localStorage.removeItem('glow_avatar');
+            localStorage.removeItem('glow_status');
+            localStorage.removeItem('glow_char');
+            localStorage.removeItem('glow_gender');
+            
+            initLocalStorageData();
+            triggerToast("Вы успешно вышли из аккаунта!");
+        }
+
+        // Ручной вход
         function promptManualLogin() {
-            const name = prompt("Введите ваш никнейм:", localStorage.getItem('glow_name') || "Миямура семпай");
+            const name = prompt("Введите ваш никнейм:", localStorage.getItem('glow_name') || "");
             if (name) {
                 localStorage.setItem('glow_name', name);
                 localStorage.setItem('glow_status', 'Пользователь AfterGlow 🟢');
+                localStorage.setItem('glow_logged_in', 'true');
                 
                 const ava = prompt("Вставьте прямую ссылку на фото вашей аватарки (необязательно):", localStorage.getItem('glow_avatar') || "");
                 if (ava && ava.trim() !== "") {
@@ -573,23 +663,37 @@
         }
 
         function syncUIText() {
-            const name = document.getElementById('inputName').value;
-            const status = document.getElementById('inputStatus').value;
-            const char = document.getElementById('inputChar').value;
+            const name = document.getElementById('inputName').value || "Гость";
+            const status = document.getElementById('inputStatus').value || "Новый пользователь";
+            const char = document.getElementById('inputChar').value || "Не выбран";
+            const gender = document.getElementById('inputGender').value || "Не указан";
 
             document.getElementById('hdrName').innerText = name;
             document.getElementById('hdrStatus').innerText = status;
             document.getElementById('statFavChar').innerText = char;
             document.getElementById('statStatus').innerText = status;
+            document.getElementById('statGender').innerText = gender;
         }
 
         function saveProfileChanges() {
-            localStorage.setItem('glow_name', document.getElementById('inputName').value);
-            localStorage.setItem('glow_status', document.getElementById('inputStatus').value);
-            localStorage.setItem('glow_char', document.getElementById('inputChar').value);
+            const nameVal = document.getElementById('inputName').value.trim() || "Гость";
+            const statusVal = document.getElementById('inputStatus').value.trim() || "Новый пользователь";
+            const charVal = document.getElementById('inputChar').value.trim() || "Не выбран";
+            const genderVal = document.getElementById('inputGender').value || "Не указан";
+
+            localStorage.setItem('glow_name', nameVal);
+            localStorage.setItem('glow_status', statusVal);
+            localStorage.setItem('glow_char', charVal);
+            localStorage.setItem('glow_gender', genderVal);
             
+            // Если гость сменил ник с дефолтного — считаем его авторизованным
+            if (nameVal !== "Гость") {
+                localStorage.setItem('glow_logged_in', 'true');
+            }
+
             syncUIText();
-            triggerToast("Данные профиля сохранены в память браузера!");
+            updateLoginUI();
+            triggerToast("Профиль успешно обновлен!");
         }
 
         function executeAvatarSync() {
@@ -600,15 +704,17 @@
                 reader.onload = function(e) {
                     const base64Url = e.target.result;
                     localStorage.setItem('glow_avatar', base64Url);
+                    localStorage.setItem('glow_logged_in', 'true');
                     document.getElementById('hdrAvatar').src = base64Url;
-                    triggerToast("Аватарка успешно сохранена!");
+                    updateLoginUI();
+                    triggerToast("Новая аватарка сохранена!");
                 }
                 reader.readAsDataURL(file);
             }
         }
 
         // ==========================================================================
-        // SHIKIMORI LIVE ENGINE (Работа через локальный сервер-бэкенд)
+        // SHIKIMORI LIVE ENGINE (Работа через облачный сервер Render)
         // ==========================================================================
         function updateGenreFilterList() {
             const genreSelect = document.getElementById('filterGenre');
@@ -644,8 +750,8 @@
             const format = document.getElementById('filterFormat').value;
             const genre = document.getElementById('filterGenre').value;
 
-            // Запрашиваем через локальный сервер-бэкенд
-            let url = `http://localhost:3000/api/anime?limit=24&order=popularity`;
+            // Изменено на постоянный URL бэкенда Render
+            let url = `${BACKEND_URL}/api/anime?limit=24&order=popularity`;
             if (query) url += `&search=${encodeURIComponent(query)}`;
             if (format) url += `&kind=${format}`;
             if (year) url += `&season=${year}`;
@@ -663,9 +769,8 @@
             }
         }
 
-        // Автозамена для битых и заблокированных 404 постеров на красивые CSS карточки
         window.handlePosterError = function(img, title) {
-            img.onerror = null; // Предотвращаем рекурсию
+            img.onerror = null; 
             const container = img.parentElement;
             if(container) {
                 container.innerHTML = `
@@ -726,23 +831,20 @@
             document.getElementById('modalSynopsis').innerText = "Запрос детального описания...";
             document.getElementById('modalMetaStrip').innerHTML = '';
             document.getElementById('modalCharacters').innerHTML = '';
-            
-            // Сбрасываем контейнер картинки модалки
             document.getElementById('modalImgContainer').innerHTML = `<img id="modalImg" src="" style="width:100%; height:100%; object-fit:cover;" alt="Постер">`;
-            
             document.getElementById('animeProfileModal').classList.add('active');
 
             try {
-                const resDetails = await fetch(`https://anime-list-backend-ff9i.onrender.com/api/anime/${animeId}`);
+                // Все запросы переведены на сервер Render
+                const resDetails = await fetch(`${BACKEND_URL}/api/anime/${animeId}`);
                 const details = await resDetails.json();
 
-                const resRoles = await fetch(`https://anime-list-backend-ff9i.onrender.com/api/anime/${animeId}/roles`);
+                const resRoles = await fetch(`${BACKEND_URL}/api/anime/${animeId}/roles`);
                 const roles = await resRoles.json();
 
                 const finalTitle = details.russian || details.name;
                 const safeTitle = finalTitle.replace(/'/g, "\\'");
 
-                // Заполнение UI модалки
                 document.getElementById('modalTitle').innerText = finalTitle;
                 
                 const mImg = document.getElementById('modalImg');
@@ -764,7 +866,6 @@
                     <span class="meta-tag status-tag">Рейтинг: ${details.rating ? details.rating.toUpperCase() : 'G'}</span>
                 `;
 
-                // Заполнение ролей
                 const charContainer = document.getElementById('modalCharacters');
                 charContainer.innerHTML = '';
                 
@@ -803,7 +904,7 @@
         }
 
         // ==========================================================================
-        // ВСПОМОГАТЕЛЬНЫЕ ФИНЧИ СТЕНЫ И КАСТОМИЗАЦИИ
+        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ СТЕНЫ И КАСТОМИЗАЦИИ
         // ==========================================================================
         function createPost() {
             const textCtrl = document.getElementById('postText');
@@ -812,8 +913,8 @@
                 return;
             }
 
-            const author = localStorage.getItem('glow_name') || "Миямура семпай";
-            const avatar = localStorage.getItem('glow_avatar') || "https://via.placeholder.com/150/f3a3b2/ffffff?text=User";
+            const author = localStorage.getItem('glow_name') || "Гость";
+            const avatar = localStorage.getItem('glow_avatar') || DEFAULT_AVATAR;
             const time = `Сегодня в ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
             const newPost = { author, avatar, time, text: cleanHTML(textCtrl.value) };
