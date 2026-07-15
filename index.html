@@ -8,6 +8,29 @@
         /* ==========================================================================
            1. ДИЗАЙН-СИСТЕМА И ПАЛИТРЫ (Premium Web UI)
            ========================================================================== */
+        
+        :root {
+            /* ... твои стили ... */
+            --banner-bg: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
+            --banner-text: #3a3028; /* Темный текст для светлой темы */
+            --modal-overlay: rgba(58, 48, 40, 0.4);
+            --badge-nsfw: #f43f5e;
+        }
+        
+        [data-theme="sunset"] {
+            /* ... твои стили ... */
+            --banner-bg: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+            --banner-text: #3a322c; /* Темный текст для заката */
+            --modal-overlay: rgba(58, 50, 44, 0.4);
+        }
+        
+        [data-theme="midnight"] {
+            /* ... твои стили ... */
+            --banner-bg: linear-gradient(135deg, #2e3556 0%, #1e2235 100%);
+            --banner-text: #e1e2e7; /* Светлый текст для темной темы! */
+            --modal-overlay: rgba(15, 17, 26, 0.7);
+        }
+        
         :root {
             --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fbe3e7 100%);
             --bg-card: #ffffff;
@@ -138,7 +161,14 @@
         .char-chip { background: rgba(0,0,0,0.04); border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius-inner); font-size: 12px; font-weight: 600; }
 
         /* ОСТАЛЬНЫЕ КОМПОНЕНТЫ */
-        .welcome-banner { background: var(--banner-bg); border-radius: var(--radius-main); padding: 40px; color: #3a3028; margin-bottom: 35px; box-shadow: var(--shadow); }
+        .welcome-banner { 
+            background: var(--banner-bg); 
+            border-radius: var(--radius-main); 
+            padding: 40px; 
+            color: var(--banner-text); /* Было: color: #3a3028; */
+            margin-bottom: 35px; 
+            box-shadow: var(--shadow); 
+        }
         .dashboard-row { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
         @media (max-width: 768px) { .dashboard-row { grid-template-columns: 1fr; } }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -237,15 +267,17 @@
         </nav>
         <div class="header-user-corner">
             <!-- КНОПКА TELEGRAM (Замени YOUR_BOT_USERNAME на своего бота) -->
-            <div id="tg-login-container" style="margin-right: 5px;">
-                <script async 
-                        src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="afterglow_log_bot" 
-                        data-size="small" 
-                        data-auth-url="http://localhost:3000/api/auth/telegram" 
-                        data-request-access="write">
-                </script>
-            </div>
+           <!-- Было: data-auth-url="http://localhost:3000/api/auth/telegram" -->
+                <!-- Надо сделать: -->
+                <div id="tg-login-container" style="margin-right: 5px;">
+                    <script async 
+                            src="https://telegram.org/js/telegram-widget.js?22" 
+                            data-telegram-login="afterglow_log_bot" 
+                            data-size="small" 
+                            data-auth-url="https://anime-list-backend-ff9i.onrender.com/api/auth/telegram" 
+                            data-request-access="write">
+                    </script>
+                </div>
             <!-- Резервный вход на случай блокировок рекламы -->
             <button class="btn-action" style="padding: 6px 12px; font-size: 12px; margin-right: 10px;" onclick="promptManualLogin()">Войти</button>
 
