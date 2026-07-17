@@ -29,12 +29,12 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Build Unsigned Release APK with Gradle
         run: |
-          cd android && ./gradlew assembleRelease
+          cd android && ./gradlew clean assembleRelease
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
