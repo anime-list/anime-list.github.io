@@ -35,17 +35,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # НАСТРОЙКА GRADLE С ОТКЛЮЧЕНИЕМ КЭША
-      # Мы принудительно запрещаем использовать старый кэш, чтобы GitHub скачал всё с нуля
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-disabled: true
-
-      # Запуск сборки
+      # ЖЕСТКАЯ ИЗОЛЯЦИЯ: Мы принудительно переносим домашнюю папку Gradle 
+      # внутрь нашего проекта, где у сервера есть полные права на создание файлов.
       - name: Build Unsigned Release APK with Gradle
         run: |
-          cd android && ./gradlew assembleRelease
+          cd android && ./gradlew assembleRelease --gradle-user-home=../.gradle_home --no-daemon
 
       # Автоматическая подпись файла твоими секретами
       - name: Sign APK
