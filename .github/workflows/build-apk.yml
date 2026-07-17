@@ -28,14 +28,23 @@ jobs:
           npx cap add android || true
           npx cap sync android
 
-      # УСТАНОВКА JAVA 21: Поднимаем версию, чтобы исправить ошибку "дата выпуска: 21"
+      # Установка стабильной Java
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      # Наш рабочий хак: силой переписываем файл настроек Gradle на версию 8.7
+      # ХАК ДЛЯ СДК: Принудительно поднимаем версию Android SDK до 35 (Android 15).
+      # Это мгновенно исправит ошибку с поиском символа VANILLA_ICE_CREAM.
+      - name: Patch Android SDK Version to 35
+        run: |
+          if [ -f android/variables.gradle ]; then
+            sed -i 's/compileSdkVersion.*/compileSdkVersion = 35/g' android/variables.gradle
+            sed -i 's/targetSdkVersion.*/targetSdkVersion = 35/g' android/variables.gradle
+          fi
+
+      # Патчим файл настроек Gradle на версию 8.7
       - name: Patch Gradle Wrapper Properties to 8.7
         run: |
           cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
@@ -46,7 +55,7 @@ jobs:
           distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
           EOF
 
-      # Запуск сборки на обновленном Gradle и Java 21
+      # Запуск сборки на обновленном Gradle, Java 21 и SDK 35
       - name: Build Unsigned Release APK with Gradle
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
