@@ -1,0 +1,6 @@
+{
+  "appId": "space.afterglow.animelist",
+  "appName": "Anime List",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

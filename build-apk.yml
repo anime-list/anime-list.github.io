@@ -1,0 +1,58 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Установка Capacitor на сервере GitHub
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      # Синхронизация папки www с Android проектом
+      - name: Add and Sync Android Platform
+        run: |
+          npx cap add android || true
+          npx cap sync android
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # Сборка официального релизного APK
+      - name: Build Unsigned Release APK with Gradle
+        run: |
+          cd android && ./gradlew assembleRelease
+
+      # Автоматическая подпись файла твоими секретами, которые мы добавили на GitHub
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      # Выгрузка готового приложения, которое можно скачивать на телефон
+      - name: Upload Signed APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Anime List Signed
+          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
