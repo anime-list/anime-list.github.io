@@ -35,12 +35,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # МАГИЧЕСКИЙ ШАГ: Официальный настройщик от разработчиков Gradle.
-      # Он автоматически решает проблемы с правами доступа и созданием Jar-файлов в облаке.
+      # НАСТРОЙКА GRADLE С ОТКЛЮЧЕНИЕМ КЭША
+      # Мы принудительно запрещаем использовать старый кэш, чтобы GitHub скачал всё с нуля
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-disabled: true
 
-      # Запуск сборки (теперь в стандартном режиме, так как setup-gradle всё контролирует)
+      # Запуск сборки
       - name: Build Unsigned Release APK with Gradle
         run: |
           cd android && ./gradlew assembleRelease
