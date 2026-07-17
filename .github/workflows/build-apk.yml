@@ -28,15 +28,14 @@ jobs:
           npx cap add android || true
           npx cap sync android
 
-      # Установка стабильной Java
-      - name: Set up JDK 17
+      # УСТАНОВКА JAVA 21: Поднимаем версию, чтобы исправить ошибку "дата выпуска: 21"
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
-      # ХАК: Силой переписываем файл настроек Gradle напрямую.
-      # Старый Gradle 8.2.1 даже не пикнет — сервер сразу начнет качать чистую версию 8.7.
+      # Наш рабочий хак: силой переписываем файл настроек Gradle на версию 8.7
       - name: Patch Gradle Wrapper Properties to 8.7
         run: |
           cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
@@ -47,7 +46,7 @@ jobs:
           distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
           EOF
 
-      # Запуск сборки на обновленном и здоровом Gradle 8.7
+      # Запуск сборки на обновленном Gradle и Java 21
       - name: Build Unsigned Release APK with Gradle
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
