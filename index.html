@@ -8,14 +8,6 @@
         /* ==========================================================================
            1. ДИЗАЙН-СИСТЕМА И ПАЛИТРЫ (Premium Web UI)
            ========================================================================== */
-        
-        :root {
-            --banner-bg: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
-            --banner-text: #3a3028; /* Темный текст для светлой темы */
-            --modal-overlay: rgba(58, 48, 40, 0.4);
-            --badge-nsfw: #f43f5e;
-        }
-        
         [data-theme="sunset"] {
             --banner-bg: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
             --banner-text: #3a322c; /* Темный текст для заката */
@@ -42,6 +34,10 @@
             --radius-inner: 16px;
             --font-size-base: 16px;
             --banner-bg: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
+            --modal-overlay: rgba(58, 48, 40, 0.4);
+            --badge-nsfw: #f43f5e;
+            --banner-bg: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
+            --banner-text: #3a3028; 
             --modal-overlay: rgba(58, 48, 40, 0.4);
             --badge-nsfw: #f43f5e;
         }
@@ -279,7 +275,7 @@
     <!-- МЕНЮ -->
     <header>
         <div class="logo-area">
-            <span class="logo-text">🌸 AfterGlow Space</span>
+            <span class="logo-text"> Anime List</span>
         </div>
         <nav class="top-nav">
             <div class="nav-tab active" id="btn-tab-dash" onclick="switchView('dash')">Главная</div>
@@ -319,7 +315,7 @@
         <div id="view-dash" class="tab-view active">
             <div class="welcome-banner">
                 <h1 id="dynamicGreeting">Добро пожаловать!</h1>
-                <p>Версия v1.7.0 переведена на постоянное хранение данных и прямое подключение к аниме-реестру.</p>
+                <p>Версия v1.8.0 beta переведена на постоянное хранение данных и прямое подключение к аниме-реестру.</p>
             </div>
             <div class="dashboard-row">
                 <div class="stats-grid">
@@ -344,14 +340,14 @@
             <div class="feed-layout">
                 <div>
                     <div class="glass-panel">
-                        <h3 style="margin-bottom: 15px;">✍️ Написать на стену</h3>
+                        <h3 style="margin-bottom: 15px;"> Написать на стену</h3>
                         <textarea id="postText" class="post-textarea" placeholder="Напишите что-нибудь..."></textarea>
                         <div style="text-align: right;"><button class="btn-action" onclick="createPost()">Опубликовать</button></div>
                     </div>
                     <div class="feed-stream" id="postFeedContainer"></div>
                 </div>
                 <div class="glass-panel" style="align-self: start;">
-                    <h4 style="margin-bottom: 12px;">📣 Модерация</h4>
+                    <h4 style="margin-bottom: 12px;"> Модерация</h4>
                     <button class="btn-action" style="width: 100%; text-align: center;" onclick="switchView('rules')">📜 Читать правила</button>
                 </div>
             </div>
@@ -360,7 +356,7 @@
         <!-- РАЗДЕЛ 3: ЖИВАЯ БАЗА ТАЙТЛОВ -->
         <div id="view-hub" class="tab-view">
             <div class="glass-panel">
-                <h2 class="panel-title">🎬 Глобальный Поиск Аниме (Shikimori Live)</h2>
+                <h2 class="panel-title">Поиск Аниме</h2>
                 <p class="panel-subtitle">Все существующие аниме, постеры и жанры загружаются налету напрямую из сети.</p>
                 
                 <div class="filter-wrapper">
@@ -406,7 +402,7 @@
             <div class="glass-panel">
                 <h2 class="panel-title">📜 Конституция AfterGlow</h2>
                 <div class="rules-list">
-                    <div class="rule-card"><h4>1. Ламповость и Уважение</h4><p>Оскорбления участников флуда, агрессивный хейт чужих вкусов караются варном.</p></div>
+                    <div class="rule-card"><h4>1. Уважение</h4><p>Оскорбления участников флуда, агрессивный хейт чужих вкусов караются варном.</p></div>
                     <div class="rule-card"><h4>2. Спам-фильтр</h4><p>Запрещена реклама без согласования с Создателем.</p></div>
                 </div>
             </div>
@@ -415,7 +411,7 @@
         <!-- РАЗДЕЛ 5: НАСТРОЙКИ -->
         <div id="view-config" class="tab-view">
             <div class="glass-panel">
-                <h2 class="panel-title">⚙️ Настройки и Память Хаба</h2>
+                <h2 class="panel-title">⚙️ Настройки и Память</h2>
                 <div class="settings-workspace">
                     <div class="config-card">
                         <h3 style="margin-bottom: 15px; font-size: 16px; text-transform: uppercase; color: var(--accent);">👤 Профиль</h3>
@@ -736,8 +732,8 @@
             const format = document.getElementById('filterFormat').value;
             const genre = document.getElementById('filterGenre').value;
 
-            // Изменено на прямой запрос к официальному API Шикимори
-            let url = `https://shikimori.one/api/animes?limit=24&order=popularity`;
+
+        let url = `${BACKEND_URL}/api/animes?limit=24&order=popularity`;
             if (query) url += `&search=${encodeURIComponent(query)}`;
             if (format) url += `&kind=${format}`;
             if (year) url += `&season=${year}`;
@@ -767,50 +763,52 @@
             }
         }
 
-        function renderCatalogCards(animeList) {
-            const grid = document.getElementById('catalogGrid');
-            grid.innerHTML = '';
+function renderCatalogCards(animeList) {
+    const grid = document.getElementById('catalogGrid');
+    grid.innerHTML = '';
 
-            if(!animeList || animeList.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted); font-weight: 600;">Ничего не найдено. Попробуйте изменить фильтр или поисковый запрос!</div>`;
-                return;
-            }
+    if(!animeList || animeList.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted); font-weight: 600;">Ничего не найдено. Попробуйте изменить фильтр или поисковый запрос!</div>`;
+        return;
+    }
 
-            animeList.forEach(anime => {
-                const card = document.createElement('div');
-                card.className = 'anime-card';
-                card.onclick = () => openAnimeLiveProfile(anime.id);
-
-                const posterUrl = anime.image ? `https://shikimori.one${anime.image.original}` : '';
-                const score = anime.score && anime.score !== '0.0' ? `★ ${anime.score}` : 'API Live';
-                
-                let badge = `<span class="badge-pill">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>`;
-                if(anime.status === 'ongoing') {
-                    badge = `<span class="badge-pill" style="background:#ef4444;">Онгоинг</span>`;
-                }
-
-                const cardTitle = anime.russian || anime.name;
-                const safeTitle = cardTitle.replace(/'/g, "\\'");
-
-                card.innerHTML = `
-                    ${badge}
-                    <div class="poster-image-container">
-                        ${posterUrl ? 
-                            `<img class="poster-img" src="${posterUrl}" alt="Постер" loading="lazy" onerror="window.handlePosterError(this, '${safeTitle}')">` : 
-                            `<div style="width:100%; height:100%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;"><span style="color:white; font-weight:800; font-size:15px;">${cardTitle}</span></div>`
-                        }
-                    </div>
-                    <div class="anime-info">
-                        <div>
-                            <h4 class="anime-title">${cardTitle}</h4>
-                            <p class="anime-meta-line">Старт: ${anime.aired_on || 'Неизвестно'}</p>
-                        </div>
-                        <span class="btn-action" style="padding: 4px 10px; font-size:11px; align-self: flex-start;">${score}</span>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+    animeList.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.onclick = () => openAnimeLiveProfile(anime.id);
+        
+        let badge = `<span class="badge-pill">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>`;
+        if(anime.status === 'ongoing') {
+            badge = `<span class="badge-pill" style="background:#ef4444;">Онгоинг</span>`;
         }
+
+        const cardTitle = anime.russian || anime.name;
+        const safeTitle = cardTitle.replace(/'/g, "\\'");
+
+        // --- ИСПРАВЛЕНИЕ: Объявляем недостающие переменные ---
+        const posterUrl = anime.image ? `https://shikimori.one${anime.image.preview}` : '';
+        const score = anime.score || '0.0';
+        // ----------------------------------------------------
+
+        card.innerHTML = `
+            ${badge}
+            <div class="poster-image-container">
+                ${posterUrl ? 
+                    `<img class="poster-img" src="${posterUrl}" alt="Постер" loading="lazy" onerror="window.handlePosterError(this, '${safeTitle}')">` : 
+                    `<div style="width:100%; height:100%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;"><span style="color:white; font-weight:800; font-size:15px;">${cardTitle}</span></div>`
+                }
+            </div>
+            <div class="anime-info">
+                <div>
+                    <h4 class="anime-title">${cardTitle}</h4>
+                    <p class="anime-meta-line">Старт: ${anime.aired_on || 'Неизвестно'}</p>
+                </div>
+                <span class="btn-action" style="padding: 4px 10px; font-size:11px; align-self: flex-start;">★ ${score}</span>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
 
         async function openAnimeLiveProfile(animeId) {
             document.getElementById('modalTitle').innerText = "Синхронизация карточки...";
@@ -821,11 +819,10 @@
             document.getElementById('animeProfileModal').classList.add('active');
 
             try {
-                // Изменено на прямые запросы к API Шикимори
-                const resDetails = await fetch(`https://shikimori.one/api/animes/${animeId}`);
+                const resDetails = await fetch(`${BACKEND_URL}/api/animes/${animeId}`);
                 const details = await resDetails.json();
 
-                const resRoles = await fetch(`https://shikimori.one/api/animes/${animeId}/roles`);
+                const resRoles = await fetch(`${BACKEND_URL}/api/animes/${animeId}/roles`);
                 const roles = await resRoles.json();
 
                 const finalTitle = details.russian || details.name;
