@@ -35,10 +35,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Запуск сборки в безопасном однопоточном режиме без фоновых демонов
+      # МАГИЧЕСКИЙ ШАГ: Официальный настройщик от разработчиков Gradle.
+      # Он автоматически решает проблемы с правами доступа и созданием Jar-файлов в облаке.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Запуск сборки (теперь в стандартном режиме, так как setup-gradle всё контролирует)
       - name: Build Unsigned Release APK with Gradle
         run: |
-          cd android && ./gradlew clean assembleRelease --no-daemon --max-workers=1
+          cd android && ./gradlew assembleRelease
 
       # Автоматическая подпись файла твоими секретами
       - name: Sign APK
