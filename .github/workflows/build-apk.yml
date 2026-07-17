@@ -48,11 +48,13 @@ jobs:
         run: |
           echo -e "\nconfigurations.all {\n    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'\n    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'\n}" >> android/app/build.gradle
 
-      # ХАК ДЛЯ ПЛАГИНА ПОДПИСИ: Силой внедряем версию buildTools прямо в код gradle, 
-      # чтобы старый плагин увидел её и не пытался искать несуществующую версию 29.0.3
-      - name: Force Build Tools Version for Sign Action
+      # КИЛЛ-ХАК: Силой создаем папку 29.0.3 и линкуем туда актуальные инструменты сборки.
+      # Старый плагин подписи подумает, что нашел версию 29.0.3, но на самом деле выполнит всё через версию 35.
+      - name: Force Symlink Build Tools 29.0.3 to Modern Version
         run: |
-          sed -i '/android {/a \    buildToolsVersion "35.0.0"' android/app/build.gradle
+          sudo mkdir -p /usr/local/lib/android/sdk/build-tools/29.0.3
+          REAL_TOOLS=$(ls -d /usr/local/lib/android/sdk/build-tools/* | grep -v "29.0.3" | tail -n 1)
+          sudo ln -sf $REAL_TOOLS/* /usr/local/lib/android/sdk/build-tools/29.0.3/
 
       # Патчим файл настроек Gradle на версию 8.7
       - name: Patch Gradle Wrapper Properties to 8.7
@@ -65,7 +67,7 @@ jobs:
           distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
           EOF
 
-      # Запуск сборки (этот шаг у нас уже успешно проходит!)
+      # Запуск сборки
       - name: Build Unsigned Release APK with Gradle
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
