@@ -35,13 +35,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # ОБНОВЛЕНИЕ GRADLE: Избавляемся от багнутой версии 8.2.1
-      # Эта команда принудительно накатит стабильную версию 8.7, которая умеет работать с bcprov
-      - name: Update Gradle Wrapper to 8.7
+      # ХАК: Силой переписываем файл настроек Gradle напрямую.
+      # Старый Gradle 8.2.1 даже не пикнет — сервер сразу начнет качать чистую версию 8.7.
+      - name: Patch Gradle Wrapper Properties to 8.7
         run: |
-          cd android && ./gradlew wrapper --gradle-version 8.7
+          cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
+          EOF
 
-      # Запуск сборки на обновленном и здоровом Gradle
+      # Запуск сборки на обновленном и здоровом Gradle 8.7
       - name: Build Unsigned Release APK with Gradle
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
