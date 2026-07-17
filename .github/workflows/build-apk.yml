@@ -35,14 +35,19 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # ХАК ДЛЯ СДК: Принудительно поднимаем версию Android SDK до 35 (Android 15).
-      # Это мгновенно исправит ошибку с поиском символа VANILLA_ICE_CREAM.
+      # Принудительно поднимаем версию Android SDK до 35 (Android 15)
       - name: Patch Android SDK Version to 35
         run: |
           if [ -f android/variables.gradle ]; then
             sed -i 's/compileSdkVersion.*/compileSdkVersion = 35/g' android/variables.gradle
             sed -i 's/targetSdkVersion.*/targetSdkVersion = 35/g' android/variables.gradle
           fi
+
+      # УСТРАНЕНИЕ ДУБЛИКАТОВ КОТЛИНА
+      # Команда принудительно запрещает Gradle использовать старые конфликтующие библиотеки
+      - name: Fix Duplicate Kotlin Classes
+        run: |
+          echo -e "\nconfigurations.all {\n    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'\n    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'\n}" >> android/app/build.gradle
 
       # Патчим файл настроек Gradle на версию 8.7
       - name: Patch Gradle Wrapper Properties to 8.7
@@ -55,7 +60,7 @@ jobs:
           distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
           EOF
 
-      # Запуск сборки на обновленном Gradle, Java 21 и SDK 35
+      # Запуск сборки на чистом окружении
       - name: Build Unsigned Release APK with Gradle
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
