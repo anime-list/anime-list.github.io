@@ -35,11 +35,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # ЖЕСТКАЯ ИЗОЛЯЦИЯ: Мы принудительно переносим домашнюю папку Gradle 
-      # внутрь нашего проекта, где у сервера есть полные права на создание файлов.
+      # ОБНОВЛЕНИЕ GRADLE: Избавляемся от багнутой версии 8.2.1
+      # Эта команда принудительно накатит стабильную версию 8.7, которая умеет работать с bcprov
+      - name: Update Gradle Wrapper to 8.7
+        run: |
+          cd android && ./gradlew wrapper --gradle-version 8.7
+
+      # Запуск сборки на обновленном и здоровом Gradle
       - name: Build Unsigned Release APK with Gradle
         run: |
-          cd android && ./gradlew assembleRelease --gradle-user-home=../.gradle_home --no-daemon
+          cd android && ./gradlew assembleRelease --no-daemon
 
       # Автоматическая подпись файла твоими секретами
       - name: Sign APK
