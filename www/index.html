@@ -15,11 +15,18 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
+        /* Эмуляция мобильного телефона на десктопе */
         body {
             background-color: #0f131a;
             color: #ffffff;
-            padding-bottom: 75px; 
+            padding-bottom: 95px; /* Увеличенный отступ под парящий компактный таббар */
             overflow-x: hidden;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            border-left: 1px solid #1c2230;
+            border-right: 1px solid #1c2230;
+            position: relative;
         }
 
         /* --- Компоненты приложения --- */
@@ -50,7 +57,7 @@
             display: block;
         }
 
-        /* --- Сетка аниме (Анинет Стайл) --- */
+        /* --- Сетка аниме --- */
         .section-title {
             font-size: 20px;
             font-weight: 700;
@@ -80,6 +87,12 @@
             position: relative;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .anime-card:active {
+            transform: scale(0.97);
         }
 
         .poster-wrapper {
@@ -152,7 +165,7 @@
             height: 36px;
         }
 
-        /* ЗВЕЗДНЫЙ РЕЙТИНГ */
+        /* Рейтинг звёзд */
         .rating-box {
             display: flex;
             flex-direction: column;
@@ -179,6 +192,164 @@
             color: #8a94a6;
         }
 
+        /* --- Индикатор загрузки --- */
+        .loading-text {
+            text-align: center;
+            color: #8a94a6;
+            padding: 20px;
+            font-size: 14px;
+            font-style: italic;
+            grid-column: span 2;
+        }
+        .scroll-loader {
+            grid-column: span 2;
+            text-align: center;
+            padding: 20px;
+            color: #ff9f43;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- МОДАЛЬНОЕ ОКНО --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: flex-end; 
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #161b26;
+            border-top: 2px solid #232b3d;
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            width: 36px; height: 36px;
+            border-radius: 50%; font-size: 18px;
+            cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-hero-bg {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .modal-hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #161b26, rgba(22, 27, 38, 0.4));
+        }
+        .modal-main-body {
+            padding: 0 20px 30px 20px;
+            position: relative;
+            margin-top: -80px;
+            z-index: 2;
+        }
+        .modal-poster-wrap {
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        .modal-poster-wrap img {
+            width: 110px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            border: 2px solid #232b3d;
+        }
+        .modal-titles {
+            flex: 1;
+            padding-bottom: 5px;
+        }
+        .modal-title-ru {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+        .modal-title-en {
+            font-size: 13px;
+            color: #8a94a6;
+        }
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            background: #0f131a;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid #1c2230;
+            margin-bottom: 16px;
+        }
+        .info-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .info-cell .label {
+            font-size: 11px;
+            color: #8a94a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .info-cell .value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ff9f43;
+        }
+
+        .modal-status-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .modal-btn-action {
+            background: #1c2230;
+            border: 1px solid #232b3d;
+            color: #e1e6eb;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .modal-btn-action.active-watching { background: rgba(255, 159, 67, 0.2); border-color: #ff9f43; color: #ff9f43; }
+        .modal-btn-action.active-completed { background: rgba(40, 167, 69, 0.2); border-color: #28a745; color: #28a745; }
+        .modal-btn-action.active-dropped { background: rgba(255, 77, 77, 0.2); border-color: #ff4d4d; color: #ff4d4d; }
+
         /* --- Экран профиля --- */
         .profile-container {
             display: flex;
@@ -194,6 +365,7 @@
             border: 3px solid #ff9f43;
             object-fit: cover;
             margin-bottom: 12px;
+            background: #161b26;
         }
 
         .profile-name {
@@ -258,7 +430,7 @@
             box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
-        /* --- ИНТЕРФЕЙС ОБЩЕГО ЧАТА --- */
+        /* --- Чат --- */
         .chat-wrapper {
             display: flex;
             flex-direction: column;
@@ -346,8 +518,7 @@
             font-weight: 700;
             cursor: pointer;
         }
-        
-        /* ПАНЕЛЬ МУТОВ / БАНОВ С ВЫБОРОМ ВРЕМЕНИ */
+
         .mod-panel {
             margin-top: 6px;
             border-top: 1px solid rgba(255,255,255,0.08);
@@ -380,19 +551,24 @@
             border: 1px solid rgba(40, 167, 69, 0.3);
         }
 
-        /* --- Панель навигации --- */
+        /* --- ОБНОВЛЕННЫЙ: ПАРЯЩИЙ ПОЛУПРОЗРАЧНЫЙ ТАББАР --- */
         .bottom-nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 65px;
-            background: #121620;
-            border-top: 1px solid #1c2230;
+            bottom: 16px; /* Элегантный отступ снизу */
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px); /* Учитываем боковые поля */
+            max-width: 448px; /* Идеально вписывается в 480px интерфейса */
+            height: 58px; /* Более компактная высота */
+            background: rgba(18, 22, 32, 0.75); /* Мягкая полупрозрачность */
+            backdrop-filter: blur(20px); /* Сильный Frosted Glass эффект */
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Тонкая стеклянная неоновая граница */
+            border-radius: 20px; /* Сильное скругление краев */
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding-bottom: max(0px, env(safe-area-inset-bottom));
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); /* Объемная глубокая тень */
             z-index: 100;
         }
 
@@ -404,11 +580,12 @@
             background: none;
             border: none;
             font-size: 10px;
-            gap: 4px;
+            gap: 3px;
             width: 25%;
             height: 100%;
             justify-content: center;
             cursor: pointer;
+            transition: color 0.2s ease;
         }
 
         .nav-item.active {
@@ -416,58 +593,9 @@
         }
 
         .nav-item svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             fill: currentColor;
-        }
-        
-        /* --- Полноэкранная авторизация --- */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0f131a;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        
-        .auth-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-20px);
-        }
-        
-        .auth-card {
-            background: #161b26;
-            border: 1px solid #232b3d;
-            border-radius: 20px;
-            padding: 30px 24px;
-            width: 100%;
-            max-width: 360px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        
-        .auth-logo {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-        
-        .auth-subtitle {
-            color: #8a94a6;
-            font-size: 14px;
-            margin-bottom: 30px;
-            line-height: 1.4;
         }
         
         .logout-btn {
@@ -481,198 +609,80 @@
             font-weight: 600;
             cursor: pointer;
         }
+
+        .auth-input {
+            width: 100%;
+            background: #1c2230;
+            border: 1px solid #232b3d;
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-
-    <!-- Окно авторизации -->
-    <div id="auth-screen" class="auth-overlay">
-        <div class="auth-card">
-            <div class="auth-logo">AFTERGLOW</div>
-            <p class="auth-subtitle">Добро пожаловать! Войдите, чтобы синхронизировать свои списки аниме.</p>
-            
-            <div id="google-btn-container" style="display: flex; justify-content: center; margin-bottom: 20px;">
-                <div id="g_id_onload"
-                     data-client_id="1050181733311-go9h4sbe741t3aka8cf5o3gss6rjg1va.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-ux_mode="popup"
-                     data-callback="handleGoogleLogin"
-                     data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-shape="rectangular"
-                     data-theme="filled_black"
-                     data-text="signin_with"
-                     data-size="large"
-                     data-logo_alignment="left">
-                </div>
-            </div>
-
-            <div style="color: #566275; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">или</div>
-            <div id="telegram-widget-container" style="display: flex; justify-content: center;"></div>
-        </div>
-    </div>
 
     <!-- Шапка -->
     <header class="header">
         <div class="logo" id="header-title">AfterGlow</div>
     </header>
 
-    <!-- ЭКРАН 1: ГЛАВНАЯ (АНИМЕ КАРТОЧКИ) -->
+    <!-- ЭКРАН 1: ГЛАВНАЯ -->
     <main id="screen-home" class="screen active">
-        
-        <!-- СЕКЦИЯ: СМОТРЮ -->
         <h2 class="section-title">Смотрю</h2>
-        <div class="anime-grid">
-            <!-- Карточка 1 -->
-            <div class="anime-card" data-anime-id="1">
-                <div class="poster-wrapper">
-                    <span class="badge badge-rank">1</span>
-                    <span class="badge badge-type">TV</span>
-                    <span class="badge badge-episodes">📺 3 / 14</span>
-                    <img src="https://placehold.co/225x315/1d72b8/ffffff?text=Mushoku+Tensei" alt="Постер">
-                </div>
-                <div class="anime-info">
-                    <div class="anime-title">Реинкарнация безработного 2</div>
-                    <div class="rating-box">
-                        <div class="stars-container" data-anime-id="1">
-                            <span class="star" onclick="rateAnime('1', 1)">★</span>
-                            <span class="star" onclick="rateAnime('1', 2)">★</span>
-                            <span class="star" onclick="rateAnime('1', 3)">★</span>
-                            <span class="star" onclick="rateAnime('1', 4)">★</span>
-                            <span class="star" onclick="rateAnime('1', 5)">★</span>
-                        </div>
-                        <div class="rating-stats">Рейтинг: <span id="avg-rating-1">4.2</span> (<span id="votes-1">18</span>)</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Карточка 2 -->
-            <div class="anime-card" data-anime-id="2">
-                <div class="poster-wrapper">
-                    <span class="badge badge-rank">2</span>
-                    <span class="badge badge-type">TV</span>
-                    <span class="badge badge-episodes">📺 11 / 12</span>
-                    <img src="https://placehold.co/225x315/ff9f43/ffffff?text=Supermarket" alt="Постер">
-                </div>
-                <div class="anime-info">
-                    <div class="anime-title">История о перекуре за супермаркетом</div>
-                    <div class="rating-box">
-                        <div class="stars-container" data-anime-id="2">
-                            <span class="star" onclick="rateAnime('2', 1)">★</span>
-                            <span class="star" onclick="rateAnime('2', 2)">★</span>
-                            <span class="star" onclick="rateAnime('2', 3)">★</span>
-                            <span class="star" onclick="rateAnime('2', 4)">★</span>
-                            <span class="star" onclick="rateAnime('2', 5)">★</span>
-                        </div>
-                        <div class="rating-stats">Рейтинг: <span id="avg-rating-2">4.8</span> (<span id="votes-2">34</span>)</div>
-                    </div>
-                </div>
-            </div>
+        <div class="anime-grid" id="shiki-watching-grid"></div>
+        
+        <h2 class="section-title">Лента Аниме</h2>
+        <input type="text" id="anime-search" placeholder="Beta (Не работает)" 
+       oninput="filterSearch(this.value)"
+       style="width:100%; padding:12px; background:#161b26; border:1px solid #232b3d; border-radius:12px; color:#fff; margin-bottom:10px;">
+       
 
-            <!-- Карточка 3 -->
-            <div class="anime-card" data-anime-id="3">
-                <div class="poster-wrapper">
-                    <span class="badge badge-rank">3</span>
-                    <span class="badge badge-type">TV</span>
-                    <span class="badge badge-episodes">📺 5 / 8</span>
-                    <img src="https://placehold.co/225x315/ff4d4d/ffffff?text=Demon+Slayer" alt="Постер">
-                </div>
-                <div class="anime-info">
-                    <div class="anime-title">Клинок, рассекающий демонов: Тренировка столпов</div>
-                    <div class="rating-box">
-                        <div class="stars-container" data-anime-id="3">
-                            <span class="star" onclick="rateAnime('3', 1)">★</span>
-                            <span class="star" onclick="rateAnime('3', 2)">★</span>
-                            <span class="star" onclick="rateAnime('3', 3)">★</span>
-                            <span class="star" onclick="rateAnime('3', 4)">★</span>
-                            <span class="star" onclick="rateAnime('3', 5)">★</span>
-                        </div>
-                        <div class="rating-stats">Рейтинг: <span id="avg-rating-3">4.6</span> (<span id="votes-3">52</span>)</div>
-                    </div>
-                </div>
-            </div>
+<script>
+function filterSearch(query) {
+    const cards = document.querySelectorAll('.anime-card');
+    cards.forEach(card => {
+        const title = card.querySelector('.anime-title').innerText.toLowerCase();
+        card.style.display = title.includes(query.toLowerCase()) ? 'flex' : 'none';
+    });
+}
 
-            <!-- Карточка 4 -->
-            <div class="anime-card" data-anime-id="4">
-                <div class="poster-wrapper">
-                    <span class="badge badge-rank">4</span>
-                    <span class="badge badge-type">TV</span>
-                    <span class="badge badge-episodes">📺 23 / 23</span>
-                    <img src="https://placehold.co/225x315/a55eea/ffffff?text=Jujutsu+Kaisen" alt="Постер">
-                </div>
-                <div class="anime-info">
-                    <div class="anime-title">Магическая битва: Инцидент в Сибуе</div>
-                    <div class="rating-box">
-                        <div class="stars-container" data-anime-id="4">
-                            <span class="star" onclick="rateAnime('4', 1)">★</span>
-                            <span class="star" onclick="rateAnime('4', 2)">★</span>
-                            <span class="star" onclick="rateAnime('4', 3)">★</span>
-                            <span class="star" onclick="rateAnime('4', 4)">★</span>
-                            <span class="star" onclick="rateAnime('4', 5)">★</span>
-                        </div>
-                        <div class="rating-stats">Рейтинг: <span id="avg-rating-4">4.9</span> (<span id="votes-4">81</span>)</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- СЕКЦИЯ: ОТСЛЕЖИВАЮ -->
-        <h2 class="section-title">Отслеживаю</h2>
-        <div class="anime-grid">
-            <!-- Карточка 5 -->
-            <div class="anime-card" data-anime-id="5">
-                <div class="poster-wrapper">
-                    <span class="badge badge-rank">5</span>
-                    <span class="badge badge-type">TV</span>
-                    <span class="badge badge-episodes">📺 0 / 12</span>
-                    <img src="https://placehold.co/225x315/20bf6b/ffffff?text=Solo+Leveling" alt="Постер">
-                </div>
-                <div class="anime-info">
-                    <div class="anime-title">Поднятие уровня в одиночку 2</div>
-                    <div class="rating-box">
-                        <div class="stars-container" data-anime-id="5">
-                            <span class="star" onclick="rateAnime('5', 1)">★</span>
-                            <span class="star" onclick="rateAnime('5', 2)">★</span>
-                            <span class="star" onclick="rateAnime('5', 3)">★</span>
-                            <span class="star" onclick="rateAnime('5', 4)">★</span>
-                            <span class="star" onclick="rateAnime('5', 5)">★</span>
-                        </div>
-                        <div class="rating-stats">Рейтинг: <span id="avg-rating-5">4.5</span> (<span id="votes-5">14</span>)</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Карточка 6 -->
-            <div class="anime-card" data-anime-id="6">
-                <div class="poster-wrapper">
-                    <span class="badge badge-rank">6</span>
-                    <span class="badge badge-type">ONGOING</span>
-                    <span class="badge badge-episodes">📺 2 / ??</span>
-                    <img src="https://placehold.co/225x315/eb3b5a/ffffff?text=Kaiju+No.8" alt="Постер">
-                </div>
-                <div class="anime-info">
-                    <div class="anime-title">Кайдзю номер восемь (Сезон 2)</div>
-                    <div class="rating-box">
-                        <div class="stars-container" data-anime-id="6">
-                            <span class="star" onclick="rateAnime('6', 1)">★</span>
-                            <span class="star" onclick="rateAnime('6', 2)">★</span>
-                            <span class="star" onclick="rateAnime('6', 3)">★</span>
-                            <span class="star" onclick="rateAnime('6', 4)">★</span>
-                            <span class="star" onclick="rateAnime('6', 5)">★</span>
-                        </div>
-                        <div class="rating-stats">Рейтинг: <span id="avg-rating-6">4.7</span> (<span id="votes-6">29</span>)</div>
-                    </div>
-                </div>
-            </div>
+</script>
+        <div class="anime-grid" id="shiki-tracking-grid">
+            <div class="loading-text">Загрузка списков...</div>
         </div>
     </main>
 
     <!-- ЭКРАН 2: СПИСКИ -->
     <section id="screen-lists" class="screen">
         <h2 class="section-title">Мои Списки</h2>
-        <p style="color: #8a94a6; text-align: center; margin-top: 40px;">Раздел находится в разработке...</p>
+        
+        <div style="background: #161b26; border: 1px solid #232b3d; border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 8px;">
+                <select id="filter-status" onchange="renderMyLists()" style="flex: 1; background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                    <option value="all">Все списки</option>
+                    <option value="watching">🍿 Смотрю</option>
+                    <option value="completed">✅ Просмотрено</option>
+                    <option value="dropped">❌ Брошено</option>
+                </select>
+                <select id="filter-type" onchange="renderMyLists()" style="flex: 1; background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                    <option value="all">Все типы</option>
+                    <option value="tv">TV Сериал</option>
+                    <option value="movie">Фильм</option>
+                    <option value="ova">OVA</option>
+                    <option value="ona">ONA</option>
+                </select>
+            </div>
+            <select id="filter-sort" onchange="renderMyLists()" style="background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                <option value="name">Сортировка: По названию</option>
+                <option value="score-desc">Сортировка: Моя оценка (Сначала высокие)</option>
+                <option value="score-asc">Сортировка: Моя оценка (Сначала низкие)</option>
+            </select>
+        </div>
+
+        <div class="anime-grid" id="my-lists-grid"></div>
     </section>
 
     <!-- ЭКРАН 3: ОБЩИЙ ЧАТ -->
@@ -689,31 +699,51 @@
     <!-- ЭКРАН 4: ПРОФИЛЬ -->
     <section id="screen-profile" class="screen">
         <div class="profile-container">
-            <img src="https://via.placeholder.com/150" alt="Аватар" class="avatar-main" id="user-avatar">
+            <img src="user_avatar.png" alt="Аватар" class="avatar-main" id="user-avatar">
             <h1 class="profile-name" id="user-name">Гость</h1>
-            <p class="profile-status" id="user-role-display">Пользователь</p>
+            <p class="profile-status" id="user-role-display">Гостевой режим</p>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Дней</div>
-                    <div class="stat-value">14</div>
+            <div id="profile-authorized-view" style="width: 100%;"></div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Дней</div>
+                        <div class="stat-value">14</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Средняя</div>
+                        <div class="stat-value" id="user-avg-stat">0.0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Эпизодов</div>
+                        <div class="stat-value">54</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Средняя</div>
-                    <div class="stat-value" id="user-avg-stat">0.0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Эпизодов</div>
-                    <div class="stat-value">54</div>
+                <div class="info-cell" style="margin-top:15px; background:#161b26; padding:12px; border-radius:12px;">
+    <span class="label">Любимый жанр</span>
+    <div style="font-size:14px; font-weight:700; color:#ff9f43;">Сёнэн / Психология</div>
+</div>
+
+                <div class="menu-list">
+                    <button class="admin-toggle-btn" onclick="toggleAdminMode()">Панель Создателя AfterGlow</button>
+                    <button class="logout-btn" onclick="logout()">Выйти из аккаунта</button>
                 </div>
             </div>
 
-            <div class="menu-list">
-                <!-- Твоя постоянная админ-кнопка -->
-                <button class="admin-toggle-btn" onclick="toggleAdminMode()">Панель Создателя AfterGlow</button>
-                <button class="logout-btn" onclick="logout()">Выйти из аккаунта</button>
+            <div id="profile-guest-view" style="width: 100%; display: none; margin-top: 10px;">
+                <div style="background: #161b26; border: 1px solid #232b3d; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                    <h3 style="font-size: 15px; font-weight: 700; text-align: center; color: #ff9f43; text-transform: uppercase; letter-spacing: 0.5px;">Синхронизация профиля</h3>
+                    <input type="email" id="email-input" class="auth-input" placeholder="Введите Email">
+                    <input type="password" id="password-input" class="auth-input" placeholder="Введите Пароль">
+                    <button onclick="loginWithEmail()" style="background: #ff9f43; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 4px;">Войти через Почту</button>
+                    <div style="color: #566275; font-size: 11px; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0;">или</div>
+                    <div id="google-btn-container" style="display: flex; justify-content: center;">
+                        <div id="g_id_onload" data-client_id="1050181733311-go9h4sbe741t3aka8cf5o3gss6rjg1va.apps.googleusercontent.com" data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin" data-auto_prompt="false"></div>
+                        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_black" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+                    </div>
+                </div>
             </div>
         </div>
+        <button class="admin-toggle-btn" style="background:#566275;" onclick="toggleSettings()">⚙️ Настройки</button>
     </section>
 
     <!-- ТАББАР -->
@@ -736,34 +766,87 @@
         </button>
     </nav>
 
+    <!-- МОДАЛКА -->
+    <div class="modal-overlay" id="anime-profile-modal" onclick="closeAnimeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeAnimeModal()">✕</button>
+            <div class="modal-hero-bg" id="modal-hero-bg"></div>
+            <div class="modal-main-body">
+                <div class="modal-poster-wrap">
+                    <img id="modal-img" src="" alt="Постер">
+                    <div class="modal-titles">
+                        <h3 class="modal-title-ru" id="modal-title-ru">Название аниме</h3>
+                        <p class="modal-title-en" id="modal-title-en">Original Name</p>
+                    </div>
+                </div>
+                <div class="modal-info-grid">
+                    <div class="info-cell">
+                        <span class="label">Тип</span>
+                        <span class="value" id="modal-type">TV</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="label">Эпизоды</span>
+                        <span class="value" id="modal-episodes">0 / 0</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="label">Оценка Шики</span>
+                        <span class="value" id="modal-score">0.0</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="label">Статус</span>
+                        <span class="value" id="modal-status">-</span>
+                    </div>
+                </div>
+                <div style="background: #0f131a; padding: 14px; border-radius: 16px; border: 1px solid #1c2230; margin-bottom: 14px;">
+                    <div style="font-size: 11px; color: #8a94a6; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Добавить в список:</div>
+                    <div class="modal-status-group">
+                        <button id="m-btn-watching" class="modal-btn-action" onclick="changeUserAnimeStatus('watching')">Смотрю</button>
+                        <button id="m-btn-completed" class="modal-btn-action" onclick="changeUserAnimeStatus('completed')">Просмотрено</button>
+                        <button id="m-btn-dropped" class="modal-btn-action" onclick="changeUserAnimeStatus('dropped')">Брошено</button>
+                        <button id="m-btn-none" class="modal-btn-action" style="color: #ff4d4d;" onclick="changeUserAnimeStatus('none')">Удалить</button>
+                    </div>
+                    <div style="font-size: 11px; color: #8a94a6; text-transform: uppercase; margin: 12px 0 6px 0; letter-spacing: 0.5px;">Моя оценка (10 звёзд):</div>
+                    <select id="modal-user-score-10" onchange="changeUserAnimeScore10(this.value)" style="width: 100%; background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; outline: none;">
+                        <option value="0">Без оценки</option>
+                        <option value="10">⭐ 10 — Шедевр</option>
+                        <option value="9">⭐ 9 — Великолепно</option>
+                        <option value="8">⭐ 8 — Отлично</option>
+                        <option value="7">⭐ 7 — Хорошо</option>
+                        <option value="6">⭐ 6 — Нормально</option>
+                        <option value="5">⭐ 5 — Более-менее</option>
+                        <option value="4">⭐ 4 — Так себе</option>
+                        <option value="3">⭐ 3 — Плохо</option>
+                        <option value="2">⭐ 2 — Ужасно</option>
+                        <option value="1">⭐ 1 — Хуже некуда</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ЛОГИКА ПРИЛОЖЕНИЯ -->
     <script>
+        const SHIKIMORI_BASE = "https://shikimori.one";
+        const BACKEND_URL = "https://anime-list-backend-eu.onrender.com"; 
+
+        let currentPage = 1;
+        let isAnimeLoading = false;
+        let hasMoreAnime = true;
+        let loadedAnimesCache = {}; 
+        let currentModalAnimeId = null; 
+
         let currentUser = {
             username: "Гость",
             first_name: "Гость",
-            photo_url: "https://via.placeholder.com/150",
+            photo_url: "user_avatar.png", 
             role: "user", 
+            isGuest: true,
             isMuted: false,
             isBanned: false
         };
 
-        let chatMessages = [
-            { id: "u1", username: "Дмитрий", text: "Йоу, кто уже смотрел Безработного? Как вам второй сезон?", photo_url: "https://i.pravatar.cc/100?img=11", role: "user" },
-            { id: "u2", username: "Аня", text: "Новый сезон Кайдзю прям разрывной с первых серий 🔥", photo_url: "https://i.pravatar.cc/100?img=26", role: "user" },
-            { id: "u3", username: "Никита", text: "Магическая битва — это шедевр, пересматриваю инцидент в Сибуе по третьему кругу.", photo_url: "https://i.pravatar.cc/100?img=12", role: "user" }
-        ];
-
-        // Расширенная база рейтингов для 6 карточек
-        let animeRatings = {
-            "1": { totalRating: 75.6, votes: 18, userRating: 0 },
-            "2": { totalRating: 163.2, votes: 34, userRating: 0 },
-            "3": { totalRating: 239.2, votes: 52, userRating: 0 },
-            "4": { totalRating: 396.9, votes: 81, userRating: 0 },
-            "5": { totalRating: 63.0, votes: 14, userRating: 0 },
-            "6": { totalRating: 136.3, votes: 29, userRating: 0 }
-        };
-
-        // Хранилища для ограничений: сохраняем тип ("1h", "2h", "perm")
+        let chatMessages = [];
+        let userAnimeLists = {}; 
         let activeMutes = new Map(); 
         let activeBans = new Map();  
 
@@ -771,12 +854,341 @@
             const savedUser = localStorage.getItem("user_profile");
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
-                applyUserData(currentUser);
-                hideAuthScreen();
             }
-            loadRatings();
+            applyUserData(currentUser);
+            loadUserListsFromStorage();
+            
+            fetchShikimoriAnime(1); 
+            renderWatchingGrid(); 
             renderChat();
+
+            window.addEventListener("scroll", handleWindowScroll);
         });
+
+        async function fetchShikimoriAnime(page = 1) {
+            if (isAnimeLoading || !hasMoreAnime) return;
+            isAnimeLoading = true;
+
+            if (page > 1) showScrollLoader();
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/animes?limit=12&page=${page}&order=popularity&kind=tv`);
+                if (!response.ok) throw new Error("Сбой сети бэкенда");
+                
+                const data = await response.json();
+                
+                if (!data || data.length === 0) {
+                    hasMoreAnime = false;
+                    removeScrollLoader();
+                    return;
+                }
+
+                data.forEach(anime => {
+                    loadedAnimesCache[anime.id] = anime;
+                });
+
+                renderAnimeCards(data, page === 1);
+                currentPage = page;
+
+            } catch (err) {
+                console.error("Ошибка загрузки:", err);
+                if (page === 1) {
+                    document.getElementById("shiki-tracking-grid").innerHTML = `<div class="loading-text" style="color:#ff4d4d;">Сервер Render спит или вернул ошибку.</div>`;
+                }
+            } finally {
+                isAnimeLoading = false;
+                removeScrollLoader();
+            }
+        }
+
+        function renderAnimeCards(list, isFirstPage) {
+            const trackingGrid = document.getElementById("shiki-tracking-grid");
+            if (isFirstPage) trackingGrid.innerHTML = "";
+
+            list.forEach((anime, index) => {
+                const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+                const epText = anime.episodes_aired > 0 ? `📺 ${anime.episodes_aired} / ${anime.episodes || '??'}` : `📺 0 / ${anime.episodes || '??'}`;
+
+                const shikiScore = anime.score || "—";
+                const userTrack = userAnimeLists[anime.id] || {};
+                const userScore = userTrack.score || 0;
+
+                const card = document.createElement("div");
+                card.className = "anime-card";
+                card.setAttribute("data-anime-id", anime.id);
+                card.setAttribute("onclick", `openAnimeModal('${anime.id}')`);
+
+                card.innerHTML = `
+                    <div class="poster-wrapper">
+                        <span class="badge badge-rank">${isFirstPage ? index + 1 : (currentPage - 1) * 12 + index + 1}</span>
+                        <span class="badge badge-type">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>
+                        <span class="badge badge-episodes">${epText}</span>
+                        <img src="${posterUrl}" alt="${anime.russian || anime.name}" onerror="this.src='user_avatar.png'">
+                    </div>
+                    <div class="anime-info">
+                        <div class="anime-title">${anime.russian || anime.name}</div>
+                        <div class="rating-box">
+                            <div class="stars-container">
+                                ${[1, 2, 3, 4, 5].map(num => `
+                                    <span class="star ${Math.round(userScore / 2) >= num ? 'active' : ''}" 
+                                          onclick="event.stopPropagation(); quickRate('${anime.id}', ${num})">★</span>
+                                `).join('')}
+                            </div>
+                            <div class="rating-stats">Шики: <span style="color:#fff; font-weight:600;">${shikiScore}</span> ${userScore > 0 ? `| Моя: <span style="color:#ff9f43; font-weight:600;">${userScore}</span>` : ''}</div>
+                        </div>
+                    </div>
+                `;
+                trackingGrid.appendChild(card);
+            });
+
+            recalcUserAvg();
+        }
+
+        // Честный и мгновенный клик по звездам на карточке ленты
+        function quickRate(animeId, starsCount) {
+            if (!userAnimeLists[animeId]) {
+                userAnimeLists[animeId] = { status: 'watching', score: 0 };
+            }
+            userAnimeLists[animeId].score = starsCount * 2; 
+            localStorage.setItem('user_anime_lists_store', JSON.stringify(userAnimeLists));
+            
+            refreshGridRatings();
+            renderWatchingGrid();
+            renderMyLists();
+            recalcUserAvg();
+
+            if (currentModalAnimeId === animeId) {
+                document.getElementById("modal-user-score-10").value = starsCount * 2;
+            }
+        }
+
+        // Обновление визуала оценок на всех видимых карточках без перерендеривания DOM структуры
+        function refreshGridRatings() {
+            document.querySelectorAll('.anime-card[data-anime-id]').forEach(card => {
+                const animeId = card.getAttribute('data-anime-id');
+                const anime = loadedAnimesCache[animeId];
+                if (!anime) return;
+                
+                const userTrack = userAnimeLists[animeId] || {};
+                const userScore = userTrack.score || 0;
+                const shikiScore = anime.score || "—";
+                
+                const stars = card.querySelectorAll('.star');
+                stars.forEach((star, index) => {
+                    star.classList.toggle('active', Math.round(userScore / 2) > index);
+                });
+                
+                const statsDiv = card.querySelector('.rating-stats');
+                if (statsDiv) {
+                    statsDiv.innerHTML = `Шики: <span style="color:#fff; font-weight:600;">${shikiScore}</span> ${userScore > 0 ? `| Моя: <span style="color:#ff9f43; font-weight:600;">${userScore}</span>` : ''}`;
+                }
+            });
+        }
+
+        function renderWatchingGrid() {
+            const watchingGrid = document.getElementById("shiki-watching-grid");
+            watchingGrid.innerHTML = "";
+            
+            let hasItems = false;
+            Object.keys(userAnimeLists).forEach(id => {
+                const item = userAnimeLists[id];
+                if (item.status === 'watching') {
+                    const anime = loadedAnimesCache[id];
+                    if (anime) {
+                        hasItems = true;
+                        const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+                        const epText = anime.episodes_aired > 0 ? `📺 ${anime.episodes_aired} / ${anime.episodes || '??'}` : `📺 0 / ${anime.episodes || '??'}`;
+                        
+                        const card = document.createElement("div");
+                        card.className = "anime-card";
+                        card.setAttribute("onclick", `openAnimeModal('${id}')`);
+                        card.innerHTML = `
+                            <div class="poster-wrapper">
+                                <span class="badge badge-type">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>
+                                <span class="badge badge-episodes">${epText}</span>
+                                <img src="${posterUrl}" alt="${anime.russian || anime.name}">
+                            </div>
+                            <div class="anime-info">
+                                <div class="anime-title">${anime.russian || anime.name}</div>
+                                <div style="font-size:11px; color:#ff9f43; font-weight:700;">🍿 В процессе</div>
+                            </div>
+                        `;
+                        watchingGrid.appendChild(card);
+                    }
+                }
+            });
+
+            if (!hasItems) {
+                watchingGrid.innerHTML = `<div class="loading-text" style="grid-column: span 2; padding: 10px 0; font-size:12px; color:#566275;">Список пуст. Добавьте аниме через карточку.</div>`;
+            }
+        }
+
+        function renderMyLists() {
+            const grid = document.getElementById("my-lists-grid");
+            grid.innerHTML = "";
+
+            const filterStatus = document.getElementById("filter-status").value;
+            const filterType = document.getElementById("filter-type").value;
+            const filterSort = document.getElementById("filter-sort").value;
+
+            let filteredArray = [];
+
+            Object.keys(userAnimeLists).forEach(id => {
+                const item = userAnimeLists[id];
+                const anime = loadedAnimesCache[id];
+                if (!anime) return;
+
+                if (filterStatus !== 'all' && item.status !== filterStatus) return;
+                if (filterType !== 'all' && (anime.kind || '').toLowerCase() !== filterType) return;
+
+                filteredArray.push({ id, item, anime });
+            });
+
+            if (filterSort === 'name') {
+                filteredArray.sort((a, b) => (a.anime.russian || a.anime.name).localeCompare(b.anime.russian || b.anime.name));
+            } else if (filterSort === 'score-desc') {
+                filteredArray.sort((a, b) => (b.item.score || 0) - (a.item.score || 0));
+            } else if (filterSort === 'score-asc') {
+                filteredArray.sort((a, b) => (a.item.score || 0) - (b.item.score || 0));
+            }
+
+            if (filteredArray.length === 0) {
+                grid.innerHTML = `<div class="loading-text">Нет тайтлов, соответствующих фильтрам</div>`;
+                return;
+            }
+
+            filteredArray.forEach(obj => {
+                const anime = obj.anime;
+                const userScore = obj.item.score || 0;
+                const statusLabels = { watching: '🍿 Смотрю', completed: '✅ Готово', dropped: '❌ Брошено' };
+                
+                const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+                const card = document.createElement("div");
+                card.className = "anime-card";
+                card.setAttribute("onclick", `openAnimeModal('${obj.id}')`);
+                card.innerHTML = `
+                    <div class="poster-wrapper">
+                        <span class="badge badge-type">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>
+                        <img src="${posterUrl}" alt="${anime.russian || anime.name}">
+                    </div>
+                    <div class="anime-info">
+                        <div class="anime-title">${anime.russian || anime.name}</div>
+                        <div style="font-size: 11px; margin-top:4px; display:flex; flex-direction:column; gap:2px;">
+                            <span style="color:#ff9f43;">${statusLabels[obj.item.status]}</span>
+                            <span style="color:#8a94a6;">Моя оценка: <b>${userScore > 0 ? userScore + '/10' : '—'}</b></span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function handleWindowScroll() {
+            if (!document.getElementById("screen-home").classList.contains("active")) return;
+            if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 150) {
+                if (!isAnimeLoading && hasMoreAnime) {
+                    fetchShikimoriAnime(currentPage + 1);
+                }
+            }
+        }
+
+        function showScrollLoader() {
+            if (document.getElementById("infinite-scroll-loader")) return;
+            const loader = document.createElement("div");
+            loader.className = "scroll-loader";
+            loader.id = "infinite-scroll-loader";
+            loader.innerText = "Загрузка новых тайтлов...";
+            document.getElementById("shiki-tracking-grid").appendChild(loader);
+        }
+
+        function removeScrollLoader() {
+            const loader = document.getElementById("infinite-scroll-loader");
+            if (loader) loader.remove();
+        }
+
+        function openAnimeModal(animeId) {
+            const anime = loadedAnimesCache[animeId];
+            if (!anime) return;
+
+            currentModalAnimeId = animeId;
+            const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+
+            document.getElementById("modal-hero-bg").style.backgroundImage = `url(${posterUrl})`;
+            document.getElementById("modal-img").src = posterUrl;
+            document.getElementById("modal-title-ru").innerText = anime.russian || anime.name;
+            document.getElementById("modal-title-en").innerText = anime.name;
+            
+            document.getElementById("modal-type").innerText = anime.kind ? anime.kind.toUpperCase() : "TV";
+            document.getElementById("modal-episodes").innerText = `${anime.episodes_aired || 0} / ${anime.episodes || '?'}`;
+            document.getElementById("modal-score").innerText = anime.score || "0.0";
+            
+            let statusText = "Неизвестно";
+            if (anime.status === "released") statusText = "Вышло";
+            if (anime.status === "ongoing") statusText = "Онгоинг / Выходит";
+            if (anime.status === "anons") statusText = "Анонс";
+            document.getElementById("modal-status").innerText = statusText;
+
+            resetModalActionButtons();
+            const userTrack = userAnimeLists[animeId];
+            if (userTrack && userTrack.status !== 'none') {
+                const btn = document.getElementById(`m-btn-${userTrack.status}`);
+                if (btn) btn.classList.add(`active-${userTrack.status}`);
+                document.getElementById("modal-user-score-10").value = userTrack.score || 0;
+            } else {
+                document.getElementById("modal-user-score-10").value = 0;
+            }
+
+            document.getElementById("anime-profile-modal").classList.add("active");
+        }
+
+        function resetModalActionButtons() {
+            ['watching', 'completed', 'dropped'].forEach(st => {
+                document.getElementById(`m-btn-${st}`).className = 'modal-btn-action';
+            });
+        }
+
+        function changeUserAnimeStatus(status) {
+            if (!currentModalAnimeId) return;
+
+            if (!userAnimeLists[currentModalAnimeId]) {
+                userAnimeLists[currentModalAnimeId] = { status: 'none', score: 0 };
+            }
+
+            userAnimeLists[currentModalAnimeId].status = status;
+            if (status === 'none') delete userAnimeLists[currentModalAnimeId];
+
+            localStorage.setItem('user_anime_lists_store', JSON.stringify(userAnimeLists));
+            
+            resetModalActionButtons();
+            if (status !== 'none') {
+                document.getElementById(`m-btn-${status}`).classList.add(`active-${status}`);
+            }
+
+            refreshGridRatings();
+            renderWatchingGrid();
+            renderMyLists();
+            recalcUserAvg();
+        }
+
+        function changeUserAnimeScore10(scoreValue) {
+            if (!currentModalAnimeId) return;
+
+            if (!userAnimeLists[currentModalAnimeId]) {
+                userAnimeLists[currentModalAnimeId] = { status: 'watching', score: 0 };
+            }
+
+            userAnimeLists[currentModalAnimeId].score = parseInt(scoreValue);
+            localStorage.setItem('user_anime_lists_store', JSON.stringify(userAnimeLists));
+            
+            refreshGridRatings();
+            renderMyLists();
+            recalcUserAvg();
+        }
+
+        function closeAnimeModal() {
+            document.getElementById("anime-profile-modal").classList.remove("active");
+            currentModalAnimeId = null;
+        }
 
         function switchTab(screenId, title) {
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
@@ -785,10 +1197,11 @@
             document.getElementById(`screen-${screenId}`).classList.add('active');
             document.getElementById('header-title').innerText = title;
 
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
+            if (window.event && window.event.currentTarget) {
+                window.event.currentTarget.classList.add('active');
             }
-            if(screenId === 'chat') {
+            if (screenId === 'lists') renderMyLists();
+            if (screenId === 'chat') {
                 setTimeout(() => {
                     const box = document.getElementById('chat-messages-box');
                     box.scrollTop = box.scrollHeight;
@@ -801,14 +1214,37 @@
             const base64Url = credential.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));    
-
             const googleUser = JSON.parse(jsonPayload);
 
             currentUser = {
                 username: googleUser.name,
                 first_name: googleUser.given_name,
                 photo_url: googleUser.picture,
-                role: currentUser.role || "user",
+                role: "user",
+                isGuest: false,
+                isMuted: false,
+                isBanned: false
+            };
+
+            handleLoginSuccess(currentUser);
+        }
+
+        function loginWithEmail() {
+            const email = document.getElementById("email-input").value.trim();
+            const password = document.getElementById("password-input").value.trim();
+
+            if (!email || !password) {
+                alert("Заполните почту и пароль!");
+                return;
+            }
+
+            const detectedName = email.split('@')[0];
+            currentUser = {
+                username: detectedName,
+                first_name: detectedName,
+                photo_url: "user_avatar.png",
+                role: "user",
+                isGuest: false,
                 isMuted: false,
                 isBanned: false
             };
@@ -819,27 +1255,33 @@
         function handleLoginSuccess(userData) {
             localStorage.setItem("user_profile", JSON.stringify(userData));
             applyUserData(userData);
-            hideAuthScreen();
             renderChat();
         }
 
         function applyUserData(user) {
             document.getElementById("user-name").innerText = user.first_name || user.username;
-            if (user.photo_url) {
-                document.getElementById("user-avatar").src = user.photo_url;
-            }
-            const roleDisplay = document.getElementById("user-role-display");
-            if (user.role === "admin") {
-                roleDisplay.innerText = "🔥 Главный Администратор";
-                roleDisplay.style.color = "#ff4d4d";
-            } else {
-                roleDisplay.innerText = "Пользователь";
-                roleDisplay.style.color = "#ff9f43";
-            }
-        }
+            document.getElementById("user-avatar").src = user.photo_url || "user_avatar.png";
 
-        function hideAuthScreen() {
-            document.getElementById("auth-screen").classList.add("hidden");
+            const roleDisplay = document.getElementById("user-role-display");
+            const authorizedView = document.getElementById("profile-authorized-view");
+            const guestView = document.getElementById("profile-guest-view");
+
+            if (user.isGuest) {
+                roleDisplay.innerText = "Гостевой режим";
+                roleDisplay.style.color = "#8a94a6";
+                authorizedView.style.display = "none";
+                guestView.style.display = "block";
+            } else {
+                authorizedView.style.display = "block";
+                guestView.style.display = "none";
+                if (user.role === "admin") {
+                    roleDisplay.innerText = "👑 Главный Администратор";
+                    roleDisplay.style.color = "#ff4d4d";
+                } else {
+                    roleDisplay.innerText = "Пользователь";
+                    roleDisplay.style.color = "#ff9f43";
+                }
+            }
         }
 
         function logout() {
@@ -847,8 +1289,8 @@
             window.location.reload();
         }
 
-        // --- СИСТЕМА МОДЕРАЦИИ С ТАЙМАУТАМИ ---
         function toggleAdminMode() {
+            if (currentUser.isGuest) return;
             currentUser.role = currentUser.role === "admin" ? "user" : "admin";
             applyUserData(currentUser);
             localStorage.setItem("user_profile", JSON.stringify(currentUser));
@@ -857,8 +1299,7 @@
 
         function muteUser(userId, username, duration) {
             activeMutes.set(userId, duration);
-            const timeText = duration === 'perm' ? 'Навсегда' : `${duration}`;
-            alert(`Пользователь ${username} замучен на срок: ${timeText}`);
+            alert(`Пользователь ${username} отправлен в мут на: ${duration}`);
             renderChat();
         }
 
@@ -870,27 +1311,27 @@
 
         function banUser(username, duration) {
             activeBans.set(username, duration);
-            const timeText = duration === 'perm' ? 'Навсегда' : `${duration}`;
-            alert(`Пользователь ${username} ЗАБАНЕН на срок: ${timeText}`);
+            alert(`Юзер ${username} ЗАБАНЕН: ${duration}`);
             renderChat();
         }
 
         function unbanUser(username) {
             activeBans.delete(username);
-            alert(`Пользователь ${username} успешно разбанен.`);
+            alert(`Юзер ${username} разбанен.`);
             renderChat();
         }
 
-        // --- ИСПРАВЛЕННЫЙ РЕНДЕР ЧАТА ---
         function renderChat() {
             const container = document.getElementById("chat-messages-box");
             container.innerHTML = "";
 
             if (activeBans.has(currentUser.username)) {
-                const term = activeBans.get(currentUser.username);
-                container.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding: 30px; font-weight:700;">
-                    Вы забанены администрацией AfterGlow (${term === 'perm' ? 'Навсегда' : 'Срок: ' + term}). Доступ заблокирован.
-                </div>`;
+                container.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding: 30px; font-weight:700;">Вы забанены в системе AfterGlow.</div>`;
+                return;
+            }
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = `<div style="color:#566275; text-align:center; padding: 40px; font-size:13px; font-style:italic;">В чате пока нет сообщений. Напишите что-нибудь первым!</div>`;
                 return;
             }
 
@@ -906,22 +1347,20 @@
                 if (currentUser.role === "admin" && !isMyMessage) {
                     modButtonsHtml = `
                         <div class="mod-panel">
-                            <div class="mod-title">Управление мутами:</div>
+                            <div class="mod-title">Модерация мутов:</div>
                             <div class="mod-group">
                                 ${isUserMuted 
                                     ? `<button class="mod-btn unmod-btn" onclick="unmuteUser('${msg.id}', '${msg.username}')">Размутить</button>`
                                     : `<button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', '1 час')">Мут 1ч</button>
-                                       <button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', '2 часа')">Мут 2ч</button>
-                                       <button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', 'perm')">Мут Перм</button>`
+                                       <button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', 'perm')">Перм</button>`
                                 }
                             </div>
-                            <div class="mod-title">Управление банами:</div>
+                            <div class="mod-title">Модерация банов:</div>
                             <div class="mod-group">
                                 ${isUserBanned 
                                     ? `<button class="mod-btn unmod-btn" onclick="unbanUser('${msg.username}')">Разбанить</button>`
                                     : `<button class="mod-btn" onclick="banUser('${msg.username}', '1 час')">Бан 1ч</button>
-                                       <button class="mod-btn" onclick="banUser('${msg.username}', '2 часа')">Бан 2ч</button>
-                                       <button class="mod-btn" onclick="banUser('${msg.username}', 'perm')">Бан Перм</button>`
+                                       <button class="mod-btn" onclick="banUser('${msg.username}', 'perm')">Перм</button>`
                                 }
                             </div>
                         </div>
@@ -929,13 +1368,8 @@
                 }
 
                 let textToShow = msg.text;
-                if (isUserMuted) {
-                    const duration = activeMutes.get(msg.id);
-                    textToShow = `<i style="color: #566275;">[В муте. Срок: ${duration === 'perm' ? 'Навсегда' : duration}]</i>`;
-                }
-                if (isUserBanned && !activeBans.has(currentUser.username)) {
-                    textToShow = `<i style="color: #ff4d4d;">[Пользователь забанен администрацией]</i>`;
-                }
+                if (isUserMuted) textToShow = `<i style="color: #566275;">[Сообщение скрыто: пользователь в муте]</i>`;
+                if (isUserBanned) textToShow = `<i style="color: #ff4d4d;">[Пользователь заблокирован]</i>`;
 
                 row.innerHTML = `
                     <img src="${msg.photo_url}" class="message-avatar">
@@ -950,21 +1384,13 @@
         }
 
         function sendChatMessage() {
-            if (activeBans.has(currentUser.username)) {
-                alert("Вы забанены и не можете писать сообщения!");
-                return;
-            }
-            if (activeMutes.has("me")) {
-                alert("У вас активный мут. Вы не можете отправлять сообщения.");
-                return;
-            }
-
+            if (activeBans.has(currentUser.username)) return;
             const input = document.getElementById("chat-message-input");
             const text = input.value.trim();
             if (!text) return;
 
             chatMessages.push({
-                id: "me",
+                id: currentUser.isGuest ? "guest-" + Date.now() : "me",
                 username: currentUser.username,
                 text: text,
                 photo_url: currentUser.photo_url,
@@ -973,184 +1399,87 @@
 
             input.value = "";
             renderChat();
-
             const box = document.getElementById("chat-messages-box");
             box.scrollTop = box.scrollHeight;
         }
 
-        // --- ЛОГИКА ОЦЕНОК И СОХРАНЕНИЯ ---
-        function rateAnime(animeId, starsCount) {
-            const data = animeRatings[animeId];
-            
-            if (data.userRating > 0) {
-                data.totalRating = data.totalRating - data.userRating + starsCount;
-            } else {
-                data.votes += 1;
-                data.totalRating += starsCount;
-            }
-            
-            data.userRating = starsCount;
-            localStorage.setItem(`anime_ratings_store`, JSON.stringify(animeRatings));
-            
-            updateAnimeCardUI(animeId);
-            recalcUserAvg();
-        }
-
-        function loadRatings() {
-            const stored = localStorage.getItem(`anime_ratings_store`);
-            if (stored) {
-                animeRatings = JSON.parse(stored);
-            }
-            Object.keys(animeRatings).forEach(id => updateAnimeCardUI(id));
-            recalcUserAvg();
-        }
-
-        function updateAnimeCardUI(animeId) {
-            const data = animeRatings[animeId];
-            if(!data) return;
-            const avg = (data.totalRating / data.votes).toFixed(1);
-            
-            document.getElementById(`avg-rating-${animeId}`).innerText = avg;
-            document.getElementById(`votes-${animeId}`).innerText = data.votes;
-
-            const container = document.querySelector(`.stars-container[data-anime-id="${animeId}"]`);
-            if(container) {
-                const stars = container.querySelectorAll('.star');
-                stars.forEach((star, index) => {
-                    if (index < data.userRating) {
-                        star.classList.add('active');
-                    } else {
-                        star.classList.remove('active');
-                    }
-                });
-            }
+        function loadUserListsFromStorage() {
+            const stored = localStorage.getItem('user_anime_lists_store');
+            if (stored) userAnimeLists = JSON.parse(stored);
         }
 
         function recalcUserAvg() {
-            let total = 0;
-            let count = 0;
-            Object.keys(animeRatings).forEach(id => {
-                if (animeRatings[id].userRating > 0) {
-                    total += animeRatings[id].userRating;
+            let total = 0, count = 0;
+            Object.keys(userAnimeLists).forEach(id => {
+                const score = userAnimeLists[id].score || 0;
+                if (score > 0) {
+                    total += score;
                     count++;
                 }
             });
-            const finalAvg = count > 0 ? (total / count).toFixed(1) : "0.0";
-            document.getElementById("user-avg-stat").innerText = finalAvg;
+            const userAvgField = document.getElementById("user-avg-stat");
+            if (userAvgField) {
+                userAvgField.innerText = count > 0 ? (total / count).toFixed(1) : "0.0";
+            }
         }
+        async function openDetailsModal(id) {
+    // 1. Получаем полные данные об аниме
+    const res = await fetch(`https://shikimori.one/api/animes/${id}`);
+    const anime = await res.json();
 
-        // Новая структура списка пользователя
-        let userList = {
-            "jujutsu-kaisen": {
-                mainTitle: "Магическая битва",
-                poster: "ссылка_на_главный_постер",
-                seasonsAdded: [
-                    { id: 123, title: "Сезон 1", episodesWatched: 24, totalEpisodes: 24 },
-                    { id: 456, title: "Инцидент в Сибуе", episodesWatched: 5, totalEpisodes: 23 }
-                ]
-            }
-        };
+    // 2. Достаем описание и скрины
+    const modal = document.getElementById('anime-profile-modal');
+    // ... (тут логика открытия модалки, как у тебя была)
+    
+    // Вставляем контент в модалку
+    const infoBody = document.getElementById('modal-main-body'); // Или твой контейнер
+    infoBody.innerHTML = `
+        <h3>Описание</h3>
+        <p>${anime.description || 'Описание отсутствует.'}</p>
         
-        // Функция для загрузки популярных аниме с Шикимори
-        async function loadShikimoriAnime() {
-            try {
-                // Запрос к API Шикимори (получаем топ-10 онгоингов/аниме)
-                const response = await fetch('https://shikimori.one/api/animes?limit=10&order=popularity&kind=tv');
-                const animes = await response.json();
-                
-                const grid = document.querySelector('.anime-grid');
-                grid.innerHTML = ''; // Очищаем старые заглушки
-        
-                animes.forEach(anime => {
-                    // У Шикимори относительные ссылки на постеры, делаем их полными
-                    const posterUrl = `https://shikimori.one${anime.image.original}`;
-                    
-                    grid.innerHTML += `
-                        <div class="anime-card" data-shiki-id="${anime.id}">
-                            <div class="poster-wrapper">
-                                <span class="badge badge-type">${anime.kind}</span>
-                                <span class="badge badge-episodes">📺 ${anime.episodes_aired}/${anime.episodes || '??'}</span>
-                                <img src="${posterUrl}" alt="${anime.russian || anime.name}">
-                            </div>
-                            <div class="anime-info">
-                                <div class="anime-title">${anime.russian || anime.name}</div>
-                                <button onclick="addAnimeToUserList(${anime.id}, '${anime.russian || anime.name}', '${posterUrl}')" 
-                                        style="background:#ff9f43; border:none; padding:6px; border-radius:6px; width:100%; font-weight:700; cursor:pointer; margin-top:8px;">
-                                    Добавить в список
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Ошибка при подключении к Шикимори:", error);
-            }
-        }
-        
-        // Запускаем при загрузке страницы вместо старой loadRatings
-        document.addEventListener("DOMContentLoaded", () => {
-            loadShikimoriAnime();
-            // твой остальной код (проверка авторизации и чат)...
-        });        
-        
-        // Хранилище списков пользователя (вместо старых массивов)
-        let myAnimeList = JSON.parse(localStorage.getItem('user_anime_list')) || {};
-        
-        async function addAnimeToUserList(animeId, animeTitle, posterUrl) {
-            try {
-                // 1. Запрашиваем франшизу этого аниме у Шикимори
-                const res = await fetch(`https://shikimori.one/api/animes/${animeId}/franchise`);
-                const franchiseData = await res.json();
-                
-                // Ключом для группировки сделаем ID корневой франшизы (links[0] или имя)
-                // Если Шикимори не вернул франшизу, берем ID самого аниме как базовый
-                const franchiseKey = franchiseData.links && franchiseData.links.length > 0 
-                    ? franchiseData.links[0].target_id 
-                    : animeId;
-        
-                // 2. Проверяем, есть ли уже это аниме (эта франшиза) в списке
-                if (!myAnimeList[franchiseKey]) {
-                    // Если франшизы нет, создаем новую общую карточку
-                    myAnimeList[franchiseKey] = {
-                        mainTitle: animeTitle.replace(/ (Сезон \d+|Часть \d+)/i, ''), // Убираем приписку сезона для главного имени
-                        poster: posterUrl,
-                        seasons: []
-                    };
-                }
-        
-                // 3. Проверяем, не добавлен ли уже конкретно этот сезон
-                const seasonExists = myAnimeList[franchiseKey].seasons.some(s => s.id === animeId);
-                
-                if (!seasonExists) {
-                    // Добавляем сезон внутрь франшизы
-                    myAnimeList[franchiseKey].seasons.push({
-                        id: animeId,
-                        title: animeTitle,
-                        status: "Смотрю"
-                    });
-                    alert(`«${animeTitle}» добавлен в вашу франшизу!`);
-                } else {
-                    alert("Этот сезон уже есть в вашем списке!");
-                }
-        
-                // 4. Сохраняем в локалку и обновляем счетчики
-                localStorage.setItem('user_anime_list', JSON.stringify(myAnimeList));
-                updateStats();
-        
-            } catch (error) {
-                console.error(" Не удалось сгруппировать по франшизе:", error);
-                // Резервный вариант, если API упало — добавить просто как отдельный тайтл
-            }
-        }
-        
-        function updateStats() {
-            // Количество уникальных аниме — это просто количество ключей в объекте франшиз!
-            const uniqueAnimeCount = Object.keys(myAnimeList).length;
-            
-            // Выводим это число в профиль (вместо старого статичного счетчика)
-            // Допустим, выведем в поле "Дней" или создадим новое поле
-            console.log("Уникальных аниме в списке:", uniqueAnimeCount);
-        }
+        <h3>Галерея</h3>
+        <div class="gallery" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            ${anime.screenshots.map(s => `
+                <img src="https://shikimori.one${s.original}" style="width:100%; border-radius:8px;">
+            `).join('')}
+        </div>
+    `;
+    modal.classList.add('active');
+}
     </script>
+    <!-- Кнопка вызова настроек в Профиле -->
+<!-- Модальное окно настроек -->
+<div id="settings-modal" class="modal-overlay" onclick="toggleSettings()">
+    <div class="modal-content" onclick="event.stopPropagation()" style="padding:20px;">
+        <h3 style="margin-bottom:15px;">Настройки</h3>
+        <div class="info-cell">
+            <span class="label">Тема оформления</span>
+            <select id="theme-select" onchange="changeTheme(this.value)" style="margin-top:8px; padding:10px; border-radius:8px; background:#1c2230; color:#fff; border:1px solid #232b3d;">
+                <option value="dark">🌑 Ночная (AfterGlow)</option>
+                <option value="light">☀️ Светлая</option>
+                <option value="neon">👾 Кибер-неон</option>
+            </select>
+        </div>
+        <button class="logout-btn" onclick="toggleSettings()">Закрыть</button>
+    </div>
+</div>
+
+<script>
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    modal.classList.toggle('active');
+}
+
+function changeTheme(theme) {
+    if(theme === 'light') {
+        document.body.style.backgroundColor = '#f0f2f5';
+        document.body.style.color = '#000';
+    } else {
+        document.body.style.backgroundColor = '#0f131a';
+        document.body.style.color = '#fff';
+    }
+    // Здесь можно добавить переключение классов для CSS переменных
+}
+</script>
 </body>
 </html>
