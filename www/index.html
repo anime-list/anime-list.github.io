@@ -2,999 +2,1154 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AfterGlow Space | v1.7.0 Shikimori Live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>AfterGlow Anime</title>
     <style>
-        /* ==========================================================================
-           1. ДИЗАЙН-СИСТЕМА И ПАЛИТРЫ (Premium Web UI)
-           ========================================================================== */
-        [data-theme="sunset"] {
-            --banner-bg: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-            --banner-text: #3a322c; /* Темный текст для заката */
-            --modal-overlay: rgba(58, 50, 44, 0.4);
-        }
-        
-        [data-theme="midnight"] {
-            --banner-bg: linear-gradient(135deg, #2e3556 0%, #1e2235 100%);
-            --banner-text: #e1e2e7; /* Светлый текст для темной темы! */
-            --modal-overlay: rgba(15, 17, 26, 0.7);
-        }
-        
-        :root {
-            --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fbe3e7 100%);
-            --bg-card: #ffffff;
-            --bg-nav: rgba(255, 255, 255, 0.85);
-            --accent: #f3a3b2;
-            --accent-hover: #e28fa0;
-            --text-main: #3a3028;
-            --text-muted: #8c7d73;
-            --border: rgba(243, 163, 178, 0.25);
-            --shadow: 0 15px 35px rgba(74, 59, 50, 0.06);
-            --radius-main: 24px;
-            --radius-inner: 16px;
-            --font-size-base: 16px;
-            --modal-overlay: rgba(58, 48, 40, 0.4);
-            --badge-nsfw: #f43f5e;
-            --banner-bg: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
-            --banner-text: #3a3028; 
-        }
-
-        [data-theme="sunset"] {
-            --bg-gradient: linear-gradient(135deg, #fff6ee 0%, #fee3d2 100%);
-            --bg-card: #ffffff;
-            --bg-nav: rgba(255, 255, 255, 0.85);
-            --accent: #f3a973;
-            --accent-hover: #e29359;
-            --text-main: #3a322c;
-            --text-muted: #8c7f76;
-            --border: rgba(243, 169, 115, 0.25);
-            --shadow: 0 15px 35px rgba(74, 65, 50, 0.06);
-            --banner-bg: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-            --modal-overlay: rgba(58, 50, 44, 0.4);
-        }
-
-        [data-theme="midnight"] {
-            --bg-gradient: linear-gradient(135deg, #161925 0%, #0f111a 100%);
-            --bg-card: #1e2235;
-            --bg-nav: rgba(26, 29, 46, 0.85);
-            --accent: #7091e6;
-            --accent-hover: #86a7fc;
-            --text-main: #e1e2e7;
-            --text-muted: #969ab0;
-            --border: rgba(112, 145, 230, 0.2);
-            --shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            --banner-bg: linear-gradient(135deg, #2e3556 0%, #1e2235 100%);
-            --modal-overlay: rgba(15, 17, 26, 0.7);
-        }
-
-        [data-geometry="sharp"] { --radius-main: 4px; --radius-inner: 2px; }
-        [data-font="large"] { --font-size-base: 18px; }
-        [data-font="small"] { --font-size-base: 14px; }
-        body.overcast-mode { filter: contrast(0.95) saturate(0.9); }
-
-        /* ==========================================================================
-           2. БАЗОВЫЕ СТИЛИ
-           ========================================================================== */
+        /* --- Общие настройки и обнуление --- */
         * {
-            box-sizing: border-box; margin: 0; padding: 0;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease, transform 0.2s ease;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        body { background: var(--bg-gradient); color: var(--text-main); font-size: var(--font-size-base); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-        header { background: var(--bg-nav); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; height: 85px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); }
-        .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-text { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: -0.5px; }
-
-        .top-nav { display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.03); padding: 6px; border-radius: var(--radius-inner); }
-        [data-theme="midnight"] .top-nav { background: rgba(255,255,255,0.03); }
-        .nav-tab { padding: 10px 20px; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: calc(var(--radius-inner) - 4px); user-select: none; font-size: 14px; }
-        .nav-tab:hover { color: var(--text-main); }
-        .nav-tab.active { color: #ffffff; background: var(--accent); box-shadow: 0 4px 12px rgba(243, 163, 178, 0.3); }
-
-        .header-user-corner { display: flex; align-items: center; gap: 12px; padding-left: 20px; border-left: 1px solid var(--border); }
-        .corner-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); background: #eee; }
-        .corner-info { display: flex; flex-direction: column; }
-        .corner-name { font-size: 14px; font-weight: 700; }
-        .corner-status { font-size: 11px; color: var(--accent); font-weight: 600; }
-
-        .main-container { max-width: 1200px; width: 100%; margin: 40px auto; padding: 0 20px; flex-grow: 1; }
-        .tab-view { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .tab-view.active { display: block; }
-
-        .glass-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-main); padding: 35px; box-shadow: var(--shadow); margin-bottom: 35px; }
-        .panel-title { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .panel-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 25px; }
-
-        /* ==========================================================================
-           3. КАТАЛОГ ШИКИМОРИ И ФИЛЬТР-БАР
-           ========================================================================== */
-        .filter-wrapper { background: rgba(0,0,0,0.02); border: 1px solid var(--border); border-radius: var(--radius-inner); padding: 20px; margin-bottom: 30px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; }
-        @media (max-width: 768px) { .filter-wrapper { grid-template-columns: 1fr; } }
-        .filter-box { display: flex; flex-direction: column; gap: 6px; }
-        .filter-box label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); }
-        .filter-select, .search-input { padding: 10px 14px; border-radius: calc(var(--radius-inner) - 4px); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-weight: 600; outline: none; }
-        .search-input:focus { border-color: var(--accent); }
-
-        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
-        .anime-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; position: relative; display: flex; flex-direction: column; }
-        .anime-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        
-        .poster-image-container { width: 100%; height: 280px; background: #222; overflow: hidden; position: relative; }
-        .poster-img { width: 100%; height: 100%; object-fit: cover; }
-        .anime-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
-        .anime-title { font-size: 15px; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .anime-meta-line { font-size: 12px; color: var(--text-muted); }
-        
-        .badge-pill { position: absolute; top: 12px; right: 12px; background: rgba(0, 0, 0, 0.75); color: #fff; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 700; backdrop-filter: blur(4px); z-index: 2; }
-        .badge-pill.nsfw { background: var(--badge-nsfw); }
-
-        /* MODAL PROFILE */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-overlay); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .title-profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-main); width: 100%; max-width: 750px; box-shadow: var(--shadow); overflow: hidden; animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; max-height: 85vh; display: flex; flex-direction: column; }
-        
-        .profile-flex-hero { display: flex; background: #1a1a1a; color: white; position: relative; min-height: 240px; }
-        .profile-hero-img-box { width: 180px; flex-shrink: 0; background: #333; }
-        .profile-hero-details { padding: 30px; display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; background: linear-gradient(to right, rgba(26,26,26,1) 20%, rgba(26,26,26,0.4) 100%); }
-        .profile-hero-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: none; z-index: 5; }
-        
-        .profile-content { padding: 30px; overflow-y: auto; flex-grow: 1; }
-        .meta-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .meta-tag { background: rgba(243, 163, 178, 0.15); color: var(--accent); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
-        .meta-tag.status-tag { background: #e1f5fe; color: #0288d1; }
-        .profile-section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
-        .profile-synopsis { font-size: 14px; line-height: 1.6; margin-bottom: 25px; color: var(--text-main); }
-        .char-chips-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .char-chip { background: rgba(0,0,0,0.04); border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius-inner); font-size: 12px; font-weight: 600; }
-
-        /* ОСТАЛЬНЫЕ КОМПОНЕНТЫ */
-        .welcome-banner { 
-            background: var(--banner-bg); 
-            border-radius: var(--radius-main); 
-            padding: 40px; 
-            color: var(--banner-text);
-            margin-bottom: 35px; 
-            box-shadow: var(--shadow); 
+        body {
+            background-color: #0f131a;
+            color: #ffffff;
+            padding-bottom: 75px; 
+            overflow-x: hidden;
         }
-        .dashboard-row { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
-        @media (max-width: 768px) { .dashboard-row { grid-template-columns: 1fr; } }
-        
-        /* КРАСИВЫЙ СЕТОЧНЫЙ ДИЗАЙН СТАТИСТИКИ (3 колонки на десктопе) */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        @media (max-width: 600px) { 
-            .stats-grid { grid-template-columns: 1fr; } 
-            .stats-grid .stat-box { grid-column: auto !important; }
+
+        /* --- Компоненты приложения --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #0f131a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-        
-        .stat-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); padding: 20px; text-align: center; box-shadow: var(--shadow); }
-        .stat-box h4 { font-size: 24px; color: var(--accent); font-weight: 800; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .stat-box p { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
-        
-        .featured-card { display: flex; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; }
-        .featured-img-stub { width: 130px; background: linear-gradient(45deg, var(--accent), var(--accent-hover)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; text-align: center; font-size: 16px; padding: 15px; }
-        .featured-info { padding: 20px; flex: 1; }
 
-        .feed-layout { display: grid; grid-template-columns: 1.8fr 1fr; gap: 30px; }
-        @media (max-width: 850px) { .feed-layout { grid-template-columns: 1fr; } }
-        .post-textarea { width: 100%; height: 100px; padding: 15px 20px; border: 1px solid var(--border); border-radius: var(--radius-inner); background: rgba(0,0,0,0.01); color: var(--text-main); outline: none; resize: none; font-size: 15px; margin-bottom: 12px; }
-        .feed-stream { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
-        .user-post { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); padding: 25px; box-shadow: var(--shadow); }
-        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .post-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
-        .post-meta h5 { font-size: 15px; font-weight: 700; }
-        .post-meta span { font-size: 11px; color: var(--text-muted); }
-        .post-body { font-size: 15px; line-height: 1.6; white-space: pre-wrap; margin-bottom: 15px; }
-        .post-actions { display: flex; gap: 15px; border-top: 1px solid var(--border); padding-top: 12px; }
-        .like-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: none; color: var(--text-muted); font-weight: 700; font-size: 13px; cursor: pointer; }
-        .like-btn.liked { color: #f43f5e; }
+        .header .logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-        .settings-workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        @media (max-width: 768px) { .settings-workspace { grid-template-columns: 1fr; } }
-        .config-card { border: 1px solid var(--border); padding: 25px; border-radius: var(--radius-inner); background: rgba(0,0,0,0.01); margin-bottom: 20px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
-        .control-input { width: 100%; padding: 12px 18px; border: 1px solid var(--border); border-radius: var(--radius-inner); background: var(--bg-card); color: var(--text-main); outline: none; }
-        
-        /* СТИЛЬ КНОПКИ ЗАГРУЗКИ АВАТАРКИ */
-        .upload-trigger {
-            display: inline-block;
-            padding: 11px 18px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--accent);
+        .screen {
+            display: none;
+            padding: 0 16px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* --- Сетка аниме (Анинет Стайл) --- */
+        .section-title {
+            font-size: 20px;
             font-weight: 700;
-            border-radius: var(--radius-inner);
+            margin: 20px 0 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title::after {
+            content: '»';
+            color: #8a94a6;
+            font-size: 22px;
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .anime-card {
+            background: #161b26;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .poster-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 140%; 
+            background: #202736;
+        }
+
+        .poster-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .badge {
+            position: absolute;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .badge-rank {
+            top: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-type {
+            top: 8px;
+            right: 8px;
+            background: #1d72b8;
+            text-transform: uppercase;
+        }
+
+        .badge-episodes {
+            bottom: 8px;
+            left: 8px;
+            background: rgba(22, 27, 38, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .anime-info {
+            padding: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .anime-title {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.3;
+            color: #e1e6eb;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+            height: 36px;
+        }
+
+        /* ЗВЕЗДНЫЙ РЕЙТИНГ */
+        .rating-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: auto;
+            border-top: 1px solid #232b3d;
+            padding-top: 8px;
+        }
+        .stars-container {
+            display: flex;
+            gap: 3px;
+        }
+        .star {
+            font-size: 18px;
+            color: #38435a;
             cursor: pointer;
-            margin-top: 6px;
-            font-size: 13px;
+            transition: color 0.2s;
+        }
+        .star.active {
+            color: #ff9f43;
+        }
+        .rating-stats {
+            font-size: 11px;
+            color: #8a94a6;
+        }
+
+        /* --- Экран профиля --- */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .avatar-main {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #ff9f43;
+            object-fit: cover;
+            margin-bottom: 12px;
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+
+        .profile-status {
+            font-size: 14px;
+            color: #ff9f43;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #161b26;
+            border: 1px solid #232b3d;
+            border-radius: 12px;
+            padding: 12px;
             text-align: center;
         }
-        .upload-trigger:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
         }
 
-        .option-group { display: flex; gap: 8px; margin-top: 8px; }
-        .opt-btn { flex: 1; padding: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-weight: 600; border-radius: var(--radius-inner); cursor: pointer; }
-        .opt-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-        .btn-action { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: var(--radius-inner); font-weight: 600; cursor: pointer; display: inline-block; text-align: center; }
-        .btn-action:hover { background: var(--accent-hover); }
+        .stat-label {
+            font-size: 11px;
+            color: #8a94a6;
+        }
+
+        .menu-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .admin-toggle-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        /* --- ИНТЕРФЕЙС ОБЩЕГО ЧАТА --- */
+        .chat-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 165px);
+            background: #161b26;
+            border: 1px solid #232b3d;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #202736;
+        }
+        .message-body {
+            background: #202736;
+            padding: 10px 14px;
+            border-radius: 0 14px 14px 14px;
+            max-width: 85%;
+        }
+        .message-row.my-msg {
+            flex-direction: row-reverse;
+        }
+        .message-row.my-msg .message-body {
+            background: #ff9f43;
+            color: #000;
+            border-radius: 14px 0 14px 14px;
+        }
+        .message-username {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ff9f43;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .message-row.my-msg .message-username {
+            color: #fff;
+            justify-content: flex-end;
+        }
+        .message-text {
+            font-size: 14px;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 12px;
+            background: #121620;
+            border-top: 1px solid #1c2230;
+            gap: 8px;
+        }
+        .chat-input-area input {
+            flex-grow: 1;
+            background: #1c2230;
+            border: 1px solid #232b3d;
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+        }
+        .chat-input-area button {
+            background: #ff9f43;
+            color: #000;
+            border: none;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
         
-        .switch-container { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.02); padding: 12px 16px; border-radius: var(--radius-inner); border: 1px solid var(--border); margin-top: 10px; }
-        .switch-control { position: relative; display: inline-block; width: 46px; height: 24px; }
-        .switch-control input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--badge-nsfw); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        /* ПАНЕЛЬ МУТОВ / БАНОВ С ВЫБОРОМ ВРЕМЕНИ */
+        .mod-panel {
+            margin-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 6px;
+        }
+        .mod-title {
+            font-size: 10px;
+            color: #8a94a6;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .mod-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        .mod-btn {
+            background: rgba(255, 77, 77, 0.15);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .mod-btn.unmod-btn {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
 
-        .rules-list { display: flex; flex-direction: column; gap: 20px; }
-        .rule-card { border-left: 4px solid var(--accent); padding: 5px 0 5px 20px; }
-        .rule-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-        .rule-card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+        /* --- Панель навигации --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: #121620;
+            border-top: 1px solid #1c2230;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: max(0px, env(safe-area-inset-bottom));
+            z-index: 100;
+        }
 
-        #toast-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
-        .toast-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-inner); padding: 15px 25px; box-shadow: var(--shadow); color: var(--text-main); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8a94a6;
+            background: none;
+            border: none;
+            font-size: 10px;
+            gap: 4px;
+            width: 25%;
+            height: 100%;
+            justify-content: center;
+            cursor: pointer;
+        }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideInToast { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-item.active {
+            color: #ff9f43;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+        
+        /* --- Полноэкранная авторизация --- */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f131a;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .auth-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-20px);
+        }
+        
+        .auth-card {
+            background: #161b26;
+            border: 1px solid #232b3d;
+            border-radius: 20px;
+            padding: 30px 24px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .auth-logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .auth-subtitle {
+            color: #8a94a6;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .logout-btn {
+            margin-top: 20px;
+            background: rgba(255, 77, 77, 0.1);
+            color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 600;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div id="toast-container"></div>
+    <!-- Окно авторизации -->
+    <div id="auth-screen" class="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-logo">AFTERGLOW</div>
+            <p class="auth-subtitle">Добро пожаловать! Войдите, чтобы синхронизировать свои списки аниме.</p>
+            
+            <div id="google-btn-container" style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <div id="g_id_onload"
+                     data-client_id="1050181733311-go9h4sbe741t3aka8cf5o3gss6rjg1va.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleGoogleLogin"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="filled_black"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left">
+                </div>
+            </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: ЖИВОЙ ПРОФИЛЬ ТАЙТЛА -->
-    <div class="modal-overlay" id="animeProfileModal" onclick="closeAnimeProfile(event)">
-        <div class="title-profile-card" onclick="event.stopPropagation()">
-            <div class="profile-flex-hero">
-                <button class="profile-hero-close" onclick="closeAnimeProfile(null)">✕</button>
-                <div class="profile-hero-img-box" id="modalImgContainer">
-                    <img id="modalImg" src="" style="width:100%; height:100%; object-fit:cover;" alt="Постер">
-                </div>
-                <div class="profile-hero-details">
-                    <h2 id="modalTitle" style="font-size: 24px; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">Загрузка...</h2>
-                </div>
-            </div>
-            <div class="profile-content">
-                <div class="meta-strip" id="modalMetaStrip"></div>
-                <div class="profile-section-title">Синопсис</div>
-                <p class="profile-synopsis" id="modalSynopsis">Загрузка информации с серверов Shikimori...</p>
-                <div class="profile-section-title">Команда / Персонажи роли</div>
-                <div class="char-chips-container" id="modalCharacters"></div>
-            </div>
+            <div style="color: #566275; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">или</div>
+            <div id="telegram-widget-container" style="display: flex; justify-content: center;"></div>
         </div>
     </div>
 
-    <!-- МЕНЮ -->
-    <header>
-        <div class="logo-area">
-            <span class="logo-text"> Anime List</span>
-        </div>
-        <nav class="top-nav">
-            <div class="nav-tab active" id="btn-tab-dash" onclick="switchView('dash')">Главная</div>
-            <div class="nav-tab" id="btn-tab-feed" onclick="switchView('feed')">Лента</div>
-            <div class="nav-tab" id="btn-tab-hub" onclick="switchView('hub')">Тайтлы</div>
-            <div class="nav-tab" id="btn-tab-rules" onclick="switchView('rules')">Правила</div>
-            <div class="nav-tab" id="btn-tab-config" onclick="switchView('config')">Настройки</div>
-        </nav>
-        <div class="header-user-corner">
-            <!-- КНОПКА TELEGRAM -->
-            <div id="tg-login-container" style="margin-right: 5px;">
-                <script async 
-                        src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="afterglow_log_bot" 
-                        data-size="small" 
-                        data-auth-url="https://anime-list-backend-eu.onrender.com/api/auth/telegram" 
-                        data-request-access="write">
-                </script>
-            </div>
-            <!-- Резервный вход -->
-            <button class="btn-action" id="manual-login-btn" style="padding: 6px 12px; font-size: 12px; margin-right: 10px;" onclick="promptManualLogin()">Войти</button>
-            
-            <!-- Кнопка Выхода (скрыта по умолчанию) -->
-            <button class="btn-action" id="logout-btn" style="padding: 6px 12px; font-size: 12px; margin-right: 10px; background: var(--badge-nsfw); display: none;" onclick="logout()">Выйти</button>
-
-            <img src="" alt="Ава" class="corner-avatar" id="hdrAvatar">
-            <div class="corner-info">
-                <span class="corner-name" id="hdrName">Загрузка...</span>
-                <span class="corner-status" id="hdrStatus">Загрузка...</span>
-            </div>
-        </div>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="logo" id="header-title">AfterGlow</div>
     </header>
 
-    <div class="main-container">
-
-        <!-- РАЗДЕЛ 1: ГЛАВНАЯ -->
-        <div id="view-dash" class="tab-view active">
-            <div class="welcome-banner">
-                <h1 id="dynamicGreeting">Добро пожаловать!</h1>
-                <p>Версия v1.8.0 beta переведена на постоянное хранение данных и прямое подключение к аниме-реестру.</p>
-            </div>
-            <div class="dashboard-row">
-                <div class="stats-grid">
-                    <div class="stat-box"><h4 id="statPostCount">0</h4><p>Публикаций</p></div>
-                    <div class="stat-box"><h4 id="statFavChar">Не выбран</h4><p>Персонаж</p></div>
-                    <div class="stat-box"><h4 id="statGender">Не выбран</h4><p>Пол</p></div>
-                    <div class="stat-box" style="grid-column: 1 / -1;"><h4 style="font-size: 15px; color: var(--text-main);" id="statStatus">Загрузка...</h4><p>Текущий статус</p></div>
+    <!-- ЭКРАН 1: ГЛАВНАЯ (АНИМЕ КАРТОЧКИ) -->
+    <main id="screen-home" class="screen active">
+        
+        <!-- СЕКЦИЯ: СМОТРЮ -->
+        <h2 class="section-title">Смотрю</h2>
+        <div class="anime-grid">
+            <!-- Карточка 1 -->
+            <div class="anime-card" data-anime-id="1">
+                <div class="poster-wrapper">
+                    <span class="badge badge-rank">1</span>
+                    <span class="badge badge-type">TV</span>
+                    <span class="badge badge-episodes">📺 3 / 14</span>
+                    <img src="https://placehold.co/225x315/1d72b8/ffffff?text=Mushoku+Tensei" alt="Постер">
                 </div>
-                <div class="featured-card" onclick="switchView('hub')">
-                    <div class="featured-img-stub">🌐 Shikimori Connect</div>
-                    <div class="featured-info">
-                        <h3 style="margin-bottom: 5px;">Поиск по всей базе планеты</h3>
-                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Онлайн дата-майнинг</p>
-                        <p style="font-size: 14px; line-height: 1.5;">Перейдите во вкладку «Тайтлы» и введите любое название, чтобы загрузить постеры из сети.</p>
+                <div class="anime-info">
+                    <div class="anime-title">Реинкарнация безработного 2</div>
+                    <div class="rating-box">
+                        <div class="stars-container" data-anime-id="1">
+                            <span class="star" onclick="rateAnime('1', 1)">★</span>
+                            <span class="star" onclick="rateAnime('1', 2)">★</span>
+                            <span class="star" onclick="rateAnime('1', 3)">★</span>
+                            <span class="star" onclick="rateAnime('1', 4)">★</span>
+                            <span class="star" onclick="rateAnime('1', 5)">★</span>
+                        </div>
+                        <div class="rating-stats">Рейтинг: <span id="avg-rating-1">4.2</span> (<span id="votes-1">18</span>)</div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- РАЗДЕЛ 2: ЛЕНТА -->
-        <div id="view-feed" class="tab-view">
-            <div class="feed-layout">
-                <div>
-                    <div class="glass-panel">
-                        <h3 style="margin-bottom: 15px;"> Написать на стену</h3>
-                        <textarea id="postText" class="post-textarea" placeholder="Напишите что-нибудь..."></textarea>
-                        <div style="text-align: right;"><button class="btn-action" onclick="createPost()">Опубликовать</button></div>
-                    </div>
-                    <div class="feed-stream" id="postFeedContainer"></div>
-                </div>
-                <div class="glass-panel" style="align-self: start;">
-                    <h4 style="margin-bottom: 12px;"> Модерация</h4>
-                    <button class="btn-action" style="width: 100%; text-align: center;" onclick="switchView('rules')">📜 Читать правила</button>
                 </div>
             </div>
-        </div>
-
-        <!-- РАЗДЕЛ 3: ЖИВАЯ БАЗА ТАЙТЛОВ -->
-        <div id="view-hub" class="tab-view">
-            <div class="glass-panel">
-                <h2 class="panel-title">Поиск Аниме</h2>
-                <p class="panel-subtitle">Все существующие аниме, постеры и жанры загружаются на лету напрямую из сети.</p>
-                
-                <div class="filter-wrapper">
-                    <div class="filter-box">
-                        <label>Поиск по названию</label>
-                        <input type="text" id="searchAnime" class="search-input" placeholder="Введите: Наруто, Хоримия..." oninput="debounceSearch()">
-                    </div>
-                    <div class="filter-box">
-                        <label>Сезон / Год</label>
-                        <select id="filterYear" class="filter-select" onchange="fetchAnimeFromAPI(false)">
-                            <option value="">Все эпохи</option>
-                            <option value="2026">2026 год</option>
-                            <option value="2025">2025 год</option>
-                            <option value="2024">2024 год</option>
-                            <option value="2023">2023 год</option>
-                            <option value="2020">2020 год</option>
-                            <option value="2015">2015 год</option>
-                        </select>
-                    </div>
-                    <div class="filter-box">
-                        <label>Тип</label>
-                        <select id="filterFormat" class="filter-select" onchange="fetchAnimeFromAPI(false)">
-                            <option value="">Все форматы</option>
-                            <option value="tv">Сериал (TV)</option>
-                            <option value="movie">Фильм</option>
-                            <option value="ova">OVA</option>
-                        </select>
-                    </div>
-                    <div class="filter-box">
-                        <label>Жанр</label>
-                        <select id="filterGenre" class="filter-select" onchange="fetchAnimeFromAPI(false)">
-                        </select>
-                    </div>
+            
+            <!-- Карточка 2 -->
+            <div class="anime-card" data-anime-id="2">
+                <div class="poster-wrapper">
+                    <span class="badge badge-rank">2</span>
+                    <span class="badge badge-type">TV</span>
+                    <span class="badge badge-episodes">📺 11 / 12</span>
+                    <img src="https://placehold.co/225x315/ff9f43/ffffff?text=Supermarket" alt="Постер">
                 </div>
-
-                <div class="anime-grid" id="catalogGrid"></div>
-                
-                <div class="load-more-container" style="text-align: center; margin: 40px 0;">
-                    <button id="load-more-btn" class="btn-action" onclick="loadMoreAnime()">Показать еще</button>
+                <div class="anime-info">
+                    <div class="anime-title">История о перекуре за супермаркетом</div>
+                    <div class="rating-box">
+                        <div class="stars-container" data-anime-id="2">
+                            <span class="star" onclick="rateAnime('2', 1)">★</span>
+                            <span class="star" onclick="rateAnime('2', 2)">★</span>
+                            <span class="star" onclick="rateAnime('2', 3)">★</span>
+                            <span class="star" onclick="rateAnime('2', 4)">★</span>
+                            <span class="star" onclick="rateAnime('2', 5)">★</span>
+                        </div>
+                        <div class="rating-stats">Рейтинг: <span id="avg-rating-2">4.8</span> (<span id="votes-2">34</span>)</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- РАЗДЕЛ 4: ПРАВИЛА -->
-        <div id="view-rules" class="tab-view">
-            <div class="glass-panel">
-                <h2 class="panel-title">📜 Конституция AfterGlow</h2>
-                <div class="rules-list">
-                    <div class="rule-card"><h4>1. Уважение</h4><p>Оскорбления участников флуда, агрессивный хейт чужих вкусов караются варном.</p></div>
-                    <div class="rule-card"><h4>2. Спам-фильтр</h4><p>Запрещена реклама без согласования с Создателем.</p></div>
+            <!-- Карточка 3 -->
+            <div class="anime-card" data-anime-id="3">
+                <div class="poster-wrapper">
+                    <span class="badge badge-rank">3</span>
+                    <span class="badge badge-type">TV</span>
+                    <span class="badge badge-episodes">📺 5 / 8</span>
+                    <img src="https://placehold.co/225x315/ff4d4d/ffffff?text=Demon+Slayer" alt="Постер">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">Клинок, рассекающий демонов: Тренировка столпов</div>
+                    <div class="rating-box">
+                        <div class="stars-container" data-anime-id="3">
+                            <span class="star" onclick="rateAnime('3', 1)">★</span>
+                            <span class="star" onclick="rateAnime('3', 2)">★</span>
+                            <span class="star" onclick="rateAnime('3', 3)">★</span>
+                            <span class="star" onclick="rateAnime('3', 4)">★</span>
+                            <span class="star" onclick="rateAnime('3', 5)">★</span>
+                        </div>
+                        <div class="rating-stats">Рейтинг: <span id="avg-rating-3">4.6</span> (<span id="votes-3">52</span>)</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- РАЗДЕЛ 5: НАСТРОЙКИ -->
-        <div id="view-config" class="tab-view">
-            <div class="glass-panel">
-                <h2 class="panel-title">⚙️ Настройки и Память</h2>
-                <div class="settings-workspace">
-                    <div class="config-card">
-                        <h3 style="margin-bottom: 15px; font-size: 16px; text-transform: uppercase; color: var(--accent);">👤 Профиль</h3>
-                        <div class="form-group"><label>Никнейм</label><input type="text" id="inputName" class="control-input"></div>
-                        <div class="form-group"><label>Статус</label><input type="text" id="inputStatus" class="control-input"></div>
-                        <div class="form-group"><label>Любимый Персонаж</label><input type="text" id="inputChar" class="control-input"></div>
-                        
-                        <!-- ВЫБОР ПОЛА -->
-                        <div class="form-group">
-                            <label>Пол</label>
-                            <select id="inputGender" class="control-input" style="background: var(--bg-card); color: var(--text-main); font-weight: 600;">
-                                <option value="">Не указан</option>
-                                <option value="Мальчик">Мальчик </option>
-                                <option value="Девочка">Девочка </option>
-                            </select>
+            <!-- Карточка 4 -->
+            <div class="anime-card" data-anime-id="4">
+                <div class="poster-wrapper">
+                    <span class="badge badge-rank">4</span>
+                    <span class="badge badge-type">TV</span>
+                    <span class="badge badge-episodes">📺 23 / 23</span>
+                    <img src="https://placehold.co/225x315/a55eea/ffffff?text=Jujutsu+Kaisen" alt="Постер">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">Магическая битва: Инцидент в Сибуе</div>
+                    <div class="rating-box">
+                        <div class="stars-container" data-anime-id="4">
+                            <span class="star" onclick="rateAnime('4', 1)">★</span>
+                            <span class="star" onclick="rateAnime('4', 2)">★</span>
+                            <span class="star" onclick="rateAnime('4', 3)">★</span>
+                            <span class="star" onclick="rateAnime('4', 4)">★</span>
+                            <span class="star" onclick="rateAnime('4', 5)">★</span>
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Сменить фото</label><br>
-                            <label for="uploadFile" class="upload-trigger">📁 Загрузить картинку</label>
-                            <input type="file" id="uploadFile" accept="image/*" style="display:none;" onchange="executeAvatarSync()">
-                        </div>
-                        <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="saveProfileChanges()">Сохранить изменения</button>
-                    </div>
-                    
-                    <div class="config-card">
-                        <h3 style="margin-bottom: 15px; font-size: 16px; text-transform: uppercase; color: var(--accent);">🎨 Внешний вид и Защита</h3>
-                        
-                        <div class="switch-container">
-                            <div>
-                                <strong style="font-size:14px; display:block;">Отображать контент 18+</strong>
-                                <span style="font-size:11px; color:var(--text-muted);">Разблокировать Яой / Юри на сервере</span>
-                            </div>
-                            <label class="switch-control">
-                                <input type="checkbox" id="nsfwToggle" onchange="handleNsfwSwitch()">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div style="display:flex; flex-direction:column; gap:6px; margin-top: 20px; margin-bottom: 20px;">
-                            <button class="btn-action" onclick="applyTheme('sakura')" style="background:#f3a3b2; text-align:left;">🌸 Розовая Сакура</button>
-                            <button class="btn-action" onclick="applyTheme('sunset')" style="background:#f3a973; text-align:left;">🍊 Теплый Закат</button>
-                            <button class="btn-action" onclick="applyTheme('midnight')" style="background:#7091e6; text-align:left;">🌙 Ночной Океан</button>
-                        </div>
-                        <div class="option-group" style="margin-bottom: 20px;">
-                            <button class="opt-btn" id="geoRounded" onclick="applyGeometry('rounded')">Закругленные</button>
-                            <button class="opt-btn" id="geoSharp" onclick="applyGeometry('sharp')">Острые</button>
-                        </div>
-                        <div class="option-group" style="margin-bottom: 20px;">
-                            <button class="opt-btn" id="fontSmall" onclick="applyFontSize('small')">Мелкий</button>
-                            <button class="opt-btn" id="fontNormal" onclick="applyFontSize('normal')">Стандарт</button>
-                            <button class="opt-btn" id="fontLarge" onclick="applyFontSize('large')">Крупный</button>
-                        </div>
-                        <div class="option-group"><button class="opt-btn" id="overcastToggle" onclick="toggleOvercast()">☁️ Включить пасмурный режим</button></div>
+                        <div class="rating-stats">Рейтинг: <span id="avg-rating-4">4.9</span> (<span id="votes-4">81</span>)</div>
                     </div>
                 </div>
             </div>
         </div>
 
-    </div>
+        <!-- СЕКЦИЯ: ОТСЛЕЖИВАЮ -->
+        <h2 class="section-title">Отслеживаю</h2>
+        <div class="anime-grid">
+            <!-- Карточка 5 -->
+            <div class="anime-card" data-anime-id="5">
+                <div class="poster-wrapper">
+                    <span class="badge badge-rank">5</span>
+                    <span class="badge badge-type">TV</span>
+                    <span class="badge badge-episodes">📺 0 / 12</span>
+                    <img src="https://placehold.co/225x315/20bf6b/ffffff?text=Solo+Leveling" alt="Постер">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">Поднятие уровня в одиночку 2</div>
+                    <div class="rating-box">
+                        <div class="stars-container" data-anime-id="5">
+                            <span class="star" onclick="rateAnime('5', 1)">★</span>
+                            <span class="star" onclick="rateAnime('5', 2)">★</span>
+                            <span class="star" onclick="rateAnime('5', 3)">★</span>
+                            <span class="star" onclick="rateAnime('5', 4)">★</span>
+                            <span class="star" onclick="rateAnime('5', 5)">★</span>
+                        </div>
+                        <div class="rating-stats">Рейтинг: <span id="avg-rating-5">4.5</span> (<span id="votes-5">14</span>)</div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- ЯДРО ОБРАБОТКИ ДАННЫХ -->
+            <!-- Карточка 6 -->
+            <div class="anime-card" data-anime-id="6">
+                <div class="poster-wrapper">
+                    <span class="badge badge-rank">6</span>
+                    <span class="badge badge-type">ONGOING</span>
+                    <span class="badge badge-episodes">📺 2 / ??</span>
+                    <img src="https://placehold.co/225x315/eb3b5a/ffffff?text=Kaiju+No.8" alt="Постер">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">Кайдзю номер восемь (Сезон 2)</div>
+                    <div class="rating-box">
+                        <div class="stars-container" data-anime-id="6">
+                            <span class="star" onclick="rateAnime('6', 1)">★</span>
+                            <span class="star" onclick="rateAnime('6', 2)">★</span>
+                            <span class="star" onclick="rateAnime('6', 3)">★</span>
+                            <span class="star" onclick="rateAnime('6', 4)">★</span>
+                            <span class="star" onclick="rateAnime('6', 5)">★</span>
+                        </div>
+                        <div class="rating-stats">Рейтинг: <span id="avg-rating-6">4.7</span> (<span id="votes-6">29</span>)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ЭКРАН 2: СПИСКИ -->
+    <section id="screen-lists" class="screen">
+        <h2 class="section-title">Мои Списки</h2>
+        <p style="color: #8a94a6; text-align: center; margin-top: 40px;">Раздел находится в разработке...</p>
+    </section>
+
+    <!-- ЭКРАН 3: ОБЩИЙ ЧАТ -->
+    <section id="screen-chat" class="screen">
+        <div class="chat-wrapper">
+            <div class="chat-messages" id="chat-messages-box"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-message-input" placeholder="Написать в AfterGlow...">
+                <button onclick="sendChatMessage()">Отправить</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЭКРАН 4: ПРОФИЛЬ -->
+    <section id="screen-profile" class="screen">
+        <div class="profile-container">
+            <img src="https://via.placeholder.com/150" alt="Аватар" class="avatar-main" id="user-avatar">
+            <h1 class="profile-name" id="user-name">Гость</h1>
+            <p class="profile-status" id="user-role-display">Пользователь</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Дней</div>
+                    <div class="stat-value">14</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Средняя</div>
+                    <div class="stat-value" id="user-avg-stat">0.0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Эпизодов</div>
+                    <div class="stat-value">54</div>
+                </div>
+            </div>
+
+            <div class="menu-list">
+                <!-- Твоя постоянная админ-кнопка -->
+                <button class="admin-toggle-btn" onclick="toggleAdminMode()">Панель Создателя AfterGlow</button>
+                <button class="logout-btn" onclick="logout()">Выйти из аккаунта</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ТАББАР -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home', 'AfterGlow')">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Главная</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('lists', 'Списки')">
+            <svg viewBox="0 0 24 24"><path d="M4 14h6v-6h-6v6zm0 7h6v-6h-6v6zm7-7h6v-6h-6v6zm0 7h6v-6h-6v6z"/></svg>
+            <span>Списки</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('chat', 'Общий чат')">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+            <span>Чат</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('profile', 'Профиль')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Профиль</span>
+        </button>
+    </nav>
+
+    <!-- ЛОГИКА ПРИЛОЖЕНИЯ -->
     <script>
-        // НАСТРОЙКА БЭКЕНДА И ДЕФОЛТНОЙ АВАТАРКИ
-        const BACKEND_URL = "https://anime-list-backend-eu.onrender.com";
-        const DEFAULT_AVATAR = "user_avatar.png"; 
-
-        let searchTimeout;
-        let showNsfwContent = false;
-        let currentPage = 1;
-
-        const baseGenres = [
-            { id: 'all', name: 'Все жанры' },
-            { id: '1', name: 'Экшен' },
-            { id: '4', name: 'Комедия' },
-            { id: '22', name: 'Романтика' },
-            { id: '23', name: 'Школа' },
-            { id: '8', name: 'Драма' },
-            { id: '10', name: 'Фэнтези' },
-            { id: '30', name: 'Спорт' }
-        ];
-        const nsfwGenres = [
-            { id: '33', name: 'Яой' },
-            { id: '34', name: 'Юри' }
-        ];
-
-        window.onload = function() {
-            initLocalStorageData();
-            updateGenreFilterList();
-            fetchAnimeFromAPI(false);
-            
-            // Настройка динамического приветствия по имени
-            const hour = new Date().getHours();
-            const textNode = document.getElementById('dynamicGreeting');
-            const userName = localStorage.getItem('glow_name') || "Гость";
-            
-            if (hour >= 5 && hour < 12) textNode.innerText = `Доброе утро, ${userName}! 🌅`;
-            else if (hour >= 12 && hour < 18) textNode.innerText = `Добрый день! ${userName} на связи ☀️`;
-            else textNode.innerText = `Лампового вечера, ${userName}! Время смотреть онгоинги 🌙`;
+        let currentUser = {
+            username: "Гость",
+            first_name: "Гость",
+            photo_url: "https://via.placeholder.com/150",
+            role: "user", 
+            isMuted: false,
+            isBanned: false
         };
 
-        // ==========================================================================
-        // LOCAL STORAGE ENGINE
-        // ==========================================================================
-        function initLocalStorageData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const tgName = urlParams.get('username');
-            const tgAvatar = urlParams.get('avatar');
+        let chatMessages = [
+            { id: "u1", username: "Дмитрий", text: "Йоу, кто уже смотрел Безработного? Как вам второй сезон?", photo_url: "https://i.pravatar.cc/100?img=11", role: "user" },
+            { id: "u2", username: "Аня", text: "Новый сезон Кайдзю прям разрывной с первых серий 🔥", photo_url: "https://i.pravatar.cc/100?img=26", role: "user" },
+            { id: "u3", username: "Никита", text: "Магическая битва — это шедевр, пересматриваю инцидент в Сибуе по третьему кругу.", photo_url: "https://i.pravatar.cc/100?img=12", role: "user" }
+        ];
 
-            if (tgName) {
-                localStorage.setItem('glow_name', tgName);
-                if (tgAvatar) {
-                    localStorage.setItem('glow_avatar', tgAvatar);
-                } else {
-                    localStorage.removeItem('glow_avatar');
-                }
-                localStorage.setItem('glow_status', 'Пользователь AfterGlow 🟢');
-                localStorage.setItem('glow_logged_in', 'true'); 
-                
-                window.history.replaceState({}, document.title, window.location.pathname);
+        // Расширенная база рейтингов для 6 карточек
+        let animeRatings = {
+            "1": { totalRating: 75.6, votes: 18, userRating: 0 },
+            "2": { totalRating: 163.2, votes: 34, userRating: 0 },
+            "3": { totalRating: 239.2, votes: 52, userRating: 0 },
+            "4": { totalRating: 396.9, votes: 81, userRating: 0 },
+            "5": { totalRating: 63.0, votes: 14, userRating: 0 },
+            "6": { totalRating: 136.3, votes: 29, userRating: 0 }
+        };
+
+        // Хранилища для ограничений: сохраняем тип ("1h", "2h", "perm")
+        let activeMutes = new Map(); 
+        let activeBans = new Map();  
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedUser = localStorage.getItem("user_profile");
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                applyUserData(currentUser);
+                hideAuthScreen();
             }
+            loadRatings();
+            renderChat();
+        });
 
-            const hasSavedData = localStorage.getItem('glow_name') !== null;
-            
-            const currentName = hasSavedData ? localStorage.getItem('glow_name') : "Гость";
-            const currentStatus = localStorage.getItem('glow_status') !== null ? localStorage.getItem('glow_status') : "Новый пользователь";
-            const currentChar = localStorage.getItem('glow_char') !== null ? localStorage.getItem('glow_char') : "Не выбран";
-            const currentGender = localStorage.getItem('glow_gender') !== null ? localStorage.getItem('glow_gender') : "Не указан";
-            const currentAvatar = localStorage.getItem('glow_avatar') || DEFAULT_AVATAR;
+        function switchTab(screenId, title) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-            document.getElementById('inputName').value = currentName;
-            document.getElementById('inputStatus').value = currentStatus;
-            document.getElementById('inputChar').value = currentChar === "Не выбран" ? "" : currentChar;
-            document.getElementById('inputGender').value = currentGender === "Не указан" ? "" : currentGender;
-            
-            document.getElementById('hdrAvatar').src = currentAvatar;
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            document.getElementById('header-title').innerText = title;
 
-            showNsfwContent = localStorage.getItem('glow_nsfw') === 'true';
-            document.getElementById('nsfwToggle').checked = showNsfwContent;
-
-            applyTheme(localStorage.getItem('glow_theme') || 'sakura', false);
-            applyGeometry(localStorage.getItem('glow_geometry') || 'rounded', false);
-            applyFontSize(localStorage.getItem('glow_font') || 'normal', false);
-            
-            if (localStorage.getItem('glow_overcast') === 'true') {
-                document.body.classList.add('overcast-mode');
-                const overcastBtn = document.getElementById('overcastToggle');
-                if (overcastBtn) overcastBtn.innerText = "☁️ : ВКЛ";
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
             }
-
-            updateLoginUI();
-            syncUIText();
-
-            const savedPosts = JSON.parse(localStorage.getItem('glow_posts')) || [];
-            const container = document.getElementById('postFeedContainer');
-            container.innerHTML = "";
-            
-            if(savedPosts.length === 0) {
-                container.innerHTML = `
-                    <div class="user-post" id="sysNoticePost">
-                        <div class="post-header">
-                            <img src="${currentAvatar}" alt="Ава" class="post-avatar">
-                            <div class="post-meta"><h5>${currentName}</h5><span>Система</span></div>
-                        </div>
-                        <div class="post-body">Стена пуста. Подключение к серверам Shikimori настроено успешно. Все данные теперь сохраняются при перезагрузке!</div>
-                        <div class="post-actions"><button class="like-btn" onclick="handleLikeClick(this)">❤️ Лайкнуть (<span class="like-counter">0</span>)</button></div>
-                    </div>`;
-            } else {
-                savedPosts.forEach(p => {
-                    const postEl = document.createElement('div');
-                    postEl.className = 'user-post';
-                    postEl.style.marginTop = "20px";
-                    postEl.innerHTML = `
-                        <div class="post-header">
-                            <img src="${p.avatar || DEFAULT_AVATAR}" alt="Ава" class="post-avatar">
-                            <div class="post-meta"><h5>${p.author}</h5><span>${p.time}</span></div>
-                        </div>
-                        <div class="post-body">${p.text}</div>
-                        <div class="post-actions"><button class="like-btn" onclick="handleLikeClick(this)">❤️ Лайкнуть (<span class="like-counter">0</span>)</button></div>
-                    `;
-                    container.appendChild(postEl);
-                });
+            if(screenId === 'chat') {
+                setTimeout(() => {
+                    const box = document.getElementById('chat-messages-box');
+                    box.scrollTop = box.scrollHeight;
+                }, 50);
             }
-            document.getElementById('statPostCount').innerText = savedPosts.length;
         }
 
-        function updateLoginUI() {
-            const isLogged = localStorage.getItem('glow_logged_in') === 'true' || localStorage.getItem('glow_name') !== null;
-            const userName = localStorage.getItem('glow_name') || "Гость";
+        function handleGoogleLogin(response) {
+            const credential = response.credential;
+            const base64Url = credential.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));    
 
-            const tgWidget = document.getElementById('tg-login-container');
-            const manualBtn = document.getElementById('manual-login-btn');
-            const logoutBtn = document.getElementById('logout-btn');
+            const googleUser = JSON.parse(jsonPayload);
 
-            if (isLogged && userName !== "Гость") {
-                if (tgWidget) tgWidget.style.display = 'none';
-                if (manualBtn) manualBtn.style.display = 'none';
-                if (logoutBtn) logoutBtn.style.display = 'inline-block';
-            } else {
-                if (tgWidget) tgWidget.style.display = 'inline-block';
-                if (manualBtn) manualBtn.style.display = 'inline-block';
-                if (logoutBtn) logoutBtn.style.display = 'none';
+            currentUser = {
+                username: googleUser.name,
+                first_name: googleUser.given_name,
+                photo_url: googleUser.picture,
+                role: currentUser.role || "user",
+                isMuted: false,
+                isBanned: false
+            };
+
+            handleLoginSuccess(currentUser);
+        }
+
+        function handleLoginSuccess(userData) {
+            localStorage.setItem("user_profile", JSON.stringify(userData));
+            applyUserData(userData);
+            hideAuthScreen();
+            renderChat();
+        }
+
+        function applyUserData(user) {
+            document.getElementById("user-name").innerText = user.first_name || user.username;
+            if (user.photo_url) {
+                document.getElementById("user-avatar").src = user.photo_url;
             }
+            const roleDisplay = document.getElementById("user-role-display");
+            if (user.role === "admin") {
+                roleDisplay.innerText = "🔥 Главный Администратор";
+                roleDisplay.style.color = "#ff4d4d";
+            } else {
+                roleDisplay.innerText = "Пользователь";
+                roleDisplay.style.color = "#ff9f43";
+            }
+        }
+
+        function hideAuthScreen() {
+            document.getElementById("auth-screen").classList.add("hidden");
         }
 
         function logout() {
-            localStorage.removeItem('glow_logged_in');
-            localStorage.removeItem('glow_name');
-            localStorage.removeItem('glow_avatar');
-            localStorage.removeItem('glow_status');
-            localStorage.removeItem('glow_char');
-            localStorage.removeItem('glow_gender');
-            
-            initLocalStorageData();
-            triggerToast("Вы успешно вышли из аккаунта!");
+            localStorage.removeItem("user_profile");
+            window.location.reload();
         }
 
-        function promptManualLogin() {
-            const name = prompt("Введите ваш никнейм:", localStorage.getItem('glow_name') || "");
-            if (name) {
-                localStorage.setItem('glow_name', name);
-                localStorage.setItem('glow_status', 'Пользователь AfterGlow 🟢');
-                localStorage.setItem('glow_logged_in', 'true');
-                
-                const ava = prompt("Вставьте прямую ссылку на фото вашей аватарки (необязательно):", localStorage.getItem('glow_avatar') || "");
-                if (ava && ava.trim() !== "") {
-                    localStorage.setItem('glow_avatar', ava);
-                }
-                
-                initLocalStorageData();
-                triggerToast("Вход выполнен успешно!");
-            }
+        // --- СИСТЕМА МОДЕРАЦИИ С ТАЙМАУТАМИ ---
+        function toggleAdminMode() {
+            currentUser.role = currentUser.role === "admin" ? "user" : "admin";
+            applyUserData(currentUser);
+            localStorage.setItem("user_profile", JSON.stringify(currentUser));
+            renderChat();
         }
 
-        function syncUIText() {
-            const name = document.getElementById('inputName').value || "Гость";
-            const status = document.getElementById('inputStatus').value || "Новый пользователь";
-            const char = document.getElementById('inputChar').value || "Не выбран";
-            const gender = document.getElementById('inputGender').value || "Не указан";
-
-            document.getElementById('hdrName').innerText = name;
-            document.getElementById('hdrStatus').innerText = status;
-            document.getElementById('statFavChar').innerText = char;
-            document.getElementById('statStatus').innerText = status;
-            document.getElementById('statGender').innerText = gender;
+        function muteUser(userId, username, duration) {
+            activeMutes.set(userId, duration);
+            const timeText = duration === 'perm' ? 'Навсегда' : `${duration}`;
+            alert(`Пользователь ${username} замучен на срок: ${timeText}`);
+            renderChat();
         }
 
-        function saveProfileChanges() {
-            const nameVal = document.getElementById('inputName').value.trim() || "Гость";
-            const statusVal = document.getElementById('inputStatus').value.trim() || "Новый пользователь";
-            const charVal = document.getElementById('inputChar').value.trim() || "Не выбран";
-            const genderVal = document.getElementById('inputGender').value || "Не указан";
+        function unmuteUser(userId, username) {
+            activeMutes.delete(userId);
+            alert(`С пользователя ${username} снят мут.`);
+            renderChat();
+        }
 
-            localStorage.setItem('glow_name', nameVal);
-            localStorage.setItem('glow_status', statusVal);
-            localStorage.setItem('glow_char', charVal);
-            localStorage.setItem('glow_gender', genderVal);
-            
-            if (nameVal !== "Гость") {
-                localStorage.setItem('glow_logged_in', 'true');
+        function banUser(username, duration) {
+            activeBans.set(username, duration);
+            const timeText = duration === 'perm' ? 'Навсегда' : `${duration}`;
+            alert(`Пользователь ${username} ЗАБАНЕН на срок: ${timeText}`);
+            renderChat();
+        }
+
+        function unbanUser(username) {
+            activeBans.delete(username);
+            alert(`Пользователь ${username} успешно разбанен.`);
+            renderChat();
+        }
+
+        // --- ИСПРАВЛЕННЫЙ РЕНДЕР ЧАТА ---
+        function renderChat() {
+            const container = document.getElementById("chat-messages-box");
+            container.innerHTML = "";
+
+            if (activeBans.has(currentUser.username)) {
+                const term = activeBans.get(currentUser.username);
+                container.innerHTML = `<div style="color:#ff4d4d; text-align:center; padding: 30px; font-weight:700;">
+                    Вы забанены администрацией AfterGlow (${term === 'perm' ? 'Навсегда' : 'Срок: ' + term}). Доступ заблокирован.
+                </div>`;
+                return;
             }
 
-            syncUIText();
-            updateLoginUI();
-            triggerToast("Профиль успешно обновлен!");
-        }
+            chatMessages.forEach(msg => {
+                const isMyMessage = msg.username === currentUser.username;
+                const isUserBanned = activeBans.has(msg.username);
+                const isUserMuted = activeMutes.has(msg.id);
 
-        function executeAvatarSync() {
-            const fileCtrl = document.getElementById('uploadFile');
-            const file = fileCtrl.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Url = e.target.result;
-                    localStorage.setItem('glow_avatar', base64Url);
-                    localStorage.setItem('glow_logged_in', 'true');
-                    document.getElementById('hdrAvatar').src = base64Url;
-                    updateLoginUI();
-                    triggerToast("Новая аватарка сохранена!");
-                }
-                reader.readAsDataURL(file);
-            }
-        }
+                const row = document.createElement("div");
+                row.className = `message-row ${isMyMessage ? 'my-msg' : ''}`;
 
-        // ==========================================================================
-        // SHIKIMORI LIVE ENGINE (Прямые запросы к API)
-        // ==========================================================================
-        function updateGenreFilterList() {
-            const genreSelect = document.getElementById('filterGenre');
-            const currentVal = genreSelect.value;
-            genreSelect.innerHTML = '';
-            
-            let list = [...baseGenres];
-            if(showNsfwContent) list = list.concat(nsfwGenres);
-
-            list.forEach(g => {
-                const opt = document.createElement('option');
-                opt.value = g.id;
-                opt.innerText = g.name;
-                genreSelect.appendChild(opt);
-            });
-
-            genreSelect.value = currentVal || 'all';
-        }
-
-        function debounceSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                fetchAnimeFromAPI(false);
-            }, 600);
-        }
-
-        async function fetchAnimeFromAPI(append = false) {
-            const grid = document.getElementById('catalogGrid');
-            
-            if (!append) {
-                currentPage = 1;
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted); font-weight: 600;">📡 Подключение к Shikimori Core...</div>`;
-            }
-
-            const query = document.getElementById('searchAnime').value.trim();
-            const year = document.getElementById('filterYear').value;
-            const format = document.getElementById('filterFormat').value;
-            const genre = document.getElementById('filterGenre').value;
-
-            let url = `${BACKEND_URL}/api/animes?limit=24&order=popularity&page=${currentPage}`;
-            if (query) url += `&search=${encodeURIComponent(query)}`;
-            if (format) url += `&kind=${format}`;
-            if (year) url += `&season=${year}`;
-            if (genre !== 'all' && genre !== '') url += `&genre=${genre}`;
-            
-            url += `&censored=${!showNsfwContent}`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                renderCatalogCards(data, append);
-            } catch (err) {
-                console.error(err);
-                if (!append) {
-                    grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: #ef4444; font-weight: 600;">❌ Ошибка сети. Не удалось загрузить данные с Shikimori.</div>`;
-                } else {
-                    triggerToast("Ошибка при подгрузке новых тайтлов");
-                }
-            }
-        }
-
-        window.handlePosterError = function(img, title) {
-            img.onerror = null; 
-            const container = img.parentElement;
-            if(container) {
-                container.innerHTML = `
-                    <div style="width:100%; height:100%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); display:flex; align-items:center; justify-content:center; padding: 20px; text-align: center; box-sizing: border-box;">
-                        <span style="color: white; font-weight: 800; font-size: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); line-height: 1.4;">${title}</span>
-                    </div>
-                `;
-            }
-        }
-
-        function createAnimeCard(anime) {
-            let badge = `<span class="badge-pill">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>`;
-            if(anime.status === 'ongoing') {
-                badge = `<span class="badge-pill" style="background:#ef4444;">Онгоинг</span>`;
-            }
-
-            const cardTitle = anime.russian || anime.name;
-            const safeTitle = cardTitle.replace(/'/g, "\\'");
-            const posterUrl = anime.image ? `https://shikimori.one${anime.image.preview}` : '';
-            const score = anime.score || '0.0';
-
-            return `
-                <div class="anime-card" onclick="openAnimeLiveProfile(${anime.id})">
-                    ${badge}
-                    <div class="poster-image-container">
-                        ${posterUrl ? 
-                            `<img class="poster-img" src="${posterUrl}" alt="Постер" loading="lazy" onerror="window.handlePosterError(this, '${safeTitle}')">` : 
-                            `<div style="width:100%; height:100%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;"><span style="color:white; font-weight:800; font-size:15px;">${cardTitle}</span></div>`
-                        }
-                    </div>
-                    <div class="anime-info">
-                        <div>
-                            <h4 class="anime-title">${cardTitle}</h4>
-                            <p class="anime-meta-line">Старт: ${anime.aired_on || 'Неизвестно'}</p>
+                let modButtonsHtml = "";
+                if (currentUser.role === "admin" && !isMyMessage) {
+                    modButtonsHtml = `
+                        <div class="mod-panel">
+                            <div class="mod-title">Управление мутами:</div>
+                            <div class="mod-group">
+                                ${isUserMuted 
+                                    ? `<button class="mod-btn unmod-btn" onclick="unmuteUser('${msg.id}', '${msg.username}')">Размутить</button>`
+                                    : `<button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', '1 час')">Мут 1ч</button>
+                                       <button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', '2 часа')">Мут 2ч</button>
+                                       <button class="mod-btn" onclick="muteUser('${msg.id}', '${msg.username}', 'perm')">Мут Перм</button>`
+                                }
+                            </div>
+                            <div class="mod-title">Управление банами:</div>
+                            <div class="mod-group">
+                                ${isUserBanned 
+                                    ? `<button class="mod-btn unmod-btn" onclick="unbanUser('${msg.username}')">Разбанить</button>`
+                                    : `<button class="mod-btn" onclick="banUser('${msg.username}', '1 час')">Бан 1ч</button>
+                                       <button class="mod-btn" onclick="banUser('${msg.username}', '2 часа')">Бан 2ч</button>
+                                       <button class="mod-btn" onclick="banUser('${msg.username}', 'perm')">Бан Перм</button>`
+                                }
+                            </div>
                         </div>
-                        <span class="btn-action" style="padding: 4px 10px; font-size:11px; align-self: flex-start;">★ ${score}</span>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderCatalogCards(animeList, append = false) {
-            const grid = document.getElementById('catalogGrid');
-            
-            if (!append) {
-                grid.innerHTML = '';
-            }
-
-            if (!animeList || animeList.length === 0) {
-                if (!append) {
-                    grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted); font-weight: 600;">Ничего не найдено. Попробуйте изменить фильтр или поисковый запрос!</div>`;
-                } else {
-                    triggerToast("Больше тайтлов не обнаружено");
+                    `;
                 }
-                return;
-            }
 
-            animeList.forEach(anime => {
-                const cardHTML = createAnimeCard(anime);
-                grid.insertAdjacentHTML('beforeend', cardHTML);
+                let textToShow = msg.text;
+                if (isUserMuted) {
+                    const duration = activeMutes.get(msg.id);
+                    textToShow = `<i style="color: #566275;">[В муте. Срок: ${duration === 'perm' ? 'Навсегда' : duration}]</i>`;
+                }
+                if (isUserBanned && !activeBans.has(currentUser.username)) {
+                    textToShow = `<i style="color: #ff4d4d;">[Пользователь забанен администрацией]</i>`;
+                }
+
+                row.innerHTML = `
+                    <img src="${msg.photo_url}" class="message-avatar">
+                    <div class="message-body">
+                        <div class="message-username">${msg.username} ${msg.role === 'admin' ? '👑' : ''}</div>
+                        <div class="message-text">${textToShow}</div>
+                        ${modButtonsHtml}
+                    </div>
+                `;
+                container.appendChild(row);
             });
         }
 
-        function loadMoreAnime() {
-            currentPage++;
-            fetchAnimeFromAPI(true);
-        }
-
-        async function openAnimeLiveProfile(animeId) {
-            document.getElementById('modalTitle').innerText = "Синхронизация карточки...";
-            document.getElementById('modalSynopsis').innerText = "Запрос детального описания...";
-            document.getElementById('modalMetaStrip').innerHTML = '';
-            document.getElementById('modalCharacters').innerHTML = '';
-            document.getElementById('modalImgContainer').innerHTML = `<img id="modalImg" src="" style="width:100%; height:100%; object-fit:cover;" alt="Постер">`;
-            document.getElementById('animeProfileModal').classList.add('active');
-
-            try {
-                const resDetails = await fetch(`${BACKEND_URL}/api/animes/${animeId}`);
-                const details = await resDetails.json();
-
-                const resRoles = await fetch(`${BACKEND_URL}/api/animes/${animeId}/roles`);
-                const roles = await resRoles.json();
-
-                const finalTitle = details.russian || details.name;
-                const safeTitle = finalTitle.replace(/'/g, "\\'");
-
-                document.getElementById('modalTitle').innerText = finalTitle;
-                
-                const mImg = document.getElementById('modalImg');
-                if (details.image) {
-                    mImg.src = `https://shikimori.one${details.image.original}`;
-                    mImg.onerror = function() {
-                        window.handlePosterError(this, safeTitle);
-                    };
-                } else {
-                    window.handlePosterError(mImg, safeTitle);
-                }
-                
-                let cleanSynopsis = details.description ? details.description.replace(/\[.*?\]/g, '') : "Описание на русском языке отсутствует.";
-                document.getElementById('modalSynopsis').innerText = cleanSynopsis;
-
-                document.getElementById('modalMetaStrip').innerHTML = `
-                    <span class="meta-tag">Эпизоды: ${details.episodes_aired} / ${details.episodes || '?'}</span>
-                    <span class="meta-tag">Статус: ${details.status === 'released' ? 'Вышел' : 'Онгоинг'}</span>
-                    <span class="meta-tag status-tag">Рейтинг: ${details.rating ? details.rating.toUpperCase() : 'G'}</span>
-                `;
-
-                const charContainer = document.getElementById('modalCharacters');
-                charContainer.innerHTML = '';
-                
-                const mainCharacters = roles.filter(r => r.roles.includes('Main') || r.roles.includes('Character')).slice(0, 6);
-                if(mainCharacters.length === 0) {
-                    charContainer.innerHTML = '<span class="char-chip">Нет данных о касте</span>';
-                } else {
-                    mainCharacters.forEach(item => {
-                        const chip = document.createElement('span');
-                        chip.className = 'char-chip';
-                        chip.innerText = item.character ? (item.character.russian || item.character.name) : item.person.name;
-                        charContainer.appendChild(chip);
-                    });
-                }
-
-                triggerToast(`Успешно подгружен ID: ${animeId}`);
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('modalTitle').innerText = "Ошибка загрузки";
-                document.getElementById('modalSynopsis').innerText = "Не удалось связаться с сервером базы данных.";
+        function sendChatMessage() {
+            if (activeBans.has(currentUser.username)) {
+                alert("Вы забанены и не можете писать сообщения!");
+                return;
             }
-        }
-
-        function closeAnimeProfile(event) {
-            if(event && event.target !== document.getElementById('animeProfileModal')) return;
-            document.getElementById('animeProfileModal').classList.remove('active');
-        }
-
-        function handleNsfwSwitch() {
-            showNsfwContent = document.getElementById('nsfwToggle').checked;
-            localStorage.setItem('glow_nsfw', showNsfwContent);
-            updateGenreFilterList();
-            fetchAnimeFromAPI(false);
-            triggerToast(showNsfwContent ? "Фильтр 18+ отключен. Запросы разблокированы." : "Включена серверная цензура.");
-        }
-
-        // ==========================================================================
-        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ СТЕНЫ И КАСТОМИЗАЦИИ
-        // ==========================================================================
-        function createPost() {
-            const textCtrl = document.getElementById('postText');
-            if (textCtrl.value.trim() === "") {
-                triggerToast("Нельзя выложить пустую мысль!");
+            if (activeMutes.has("me")) {
+                alert("У вас активный мут. Вы не можете отправлять сообщения.");
                 return;
             }
 
-            const author = localStorage.getItem('glow_name') || "Гость";
-            const avatar = localStorage.getItem('glow_avatar') || DEFAULT_AVATAR;
-            const time = `Сегодня в ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            const input = document.getElementById("chat-message-input");
+            const text = input.value.trim();
+            if (!text) return;
 
-            const newPost = { author, avatar, time, text: cleanHTML(textCtrl.value) };
+            chatMessages.push({
+                id: "me",
+                username: currentUser.username,
+                text: text,
+                photo_url: currentUser.photo_url,
+                role: currentUser.role
+            });
 
-            let savedPosts = JSON.parse(localStorage.getItem('glow_posts')) || [];
-            savedPosts.unshift(newPost);
-            localStorage.setItem('glow_posts', JSON.stringify(savedPosts));
+            input.value = "";
+            renderChat();
 
-            initLocalStorageData();
-            textCtrl.value = "";
-            triggerToast("Запись сохранена на стене!");
+            const box = document.getElementById("chat-messages-box");
+            box.scrollTop = box.scrollHeight;
         }
 
-        function handleLikeClick(btn) {
-            const counterNode = btn.querySelector('.like-counter');
-            let count = parseInt(counterNode.innerText);
-            if(btn.classList.contains('liked')) { count--; btn.classList.remove('liked'); btn.style.color = "var(--text-muted)"; }
-            else { count++; btn.classList.add('liked'); btn.style.color = "#f43f5e"; triggerToast("Реакция сохранена!"); }
-            counterNode.innerText = count;
+        // --- ЛОГИКА ОЦЕНОК И СОХРАНЕНИЯ ---
+        function rateAnime(animeId, starsCount) {
+            const data = animeRatings[animeId];
+            
+            if (data.userRating > 0) {
+                data.totalRating = data.totalRating - data.userRating + starsCount;
+            } else {
+                data.votes += 1;
+                data.totalRating += starsCount;
+            }
+            
+            data.userRating = starsCount;
+            localStorage.setItem(`anime_ratings_store`, JSON.stringify(animeRatings));
+            
+            updateAnimeCardUI(animeId);
+            recalcUserAvg();
         }
 
-        function switchView(tabKey) {
-            document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(`view-${tabKey}`).classList.add('active');
-            document.getElementById(`btn-tab-${tabKey}`).classList.add('active');
+        function loadRatings() {
+            const stored = localStorage.getItem(`anime_ratings_store`);
+            if (stored) {
+                animeRatings = JSON.parse(stored);
+            }
+            Object.keys(animeRatings).forEach(id => updateAnimeCardUI(id));
+            recalcUserAvg();
         }
 
-        function triggerToast(text) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast-card';
-            toast.innerHTML = `✨ <span>${text}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(10px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 2500);
+        function updateAnimeCardUI(animeId) {
+            const data = animeRatings[animeId];
+            if(!data) return;
+            const avg = (data.totalRating / data.votes).toFixed(1);
+            
+            document.getElementById(`avg-rating-${animeId}`).innerText = avg;
+            document.getElementById(`votes-${animeId}`).innerText = data.votes;
+
+            const container = document.querySelector(`.stars-container[data-anime-id="${animeId}"]`);
+            if(container) {
+                const stars = container.querySelectorAll('.star');
+                stars.forEach((star, index) => {
+                    if (index < data.userRating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
         }
 
-        function cleanHTML(str) { return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])); }
+        function recalcUserAvg() {
+            let total = 0;
+            let count = 0;
+            Object.keys(animeRatings).forEach(id => {
+                if (animeRatings[id].userRating > 0) {
+                    total += animeRatings[id].userRating;
+                    count++;
+                }
+            });
+            const finalAvg = count > 0 ? (total / count).toFixed(1) : "0.0";
+            document.getElementById("user-avg-stat").innerText = finalAvg;
+        }
+
+        // Новая структура списка пользователя
+        let userList = {
+            "jujutsu-kaisen": {
+                mainTitle: "Магическая битва",
+                poster: "ссылка_на_главный_постер",
+                seasonsAdded: [
+                    { id: 123, title: "Сезон 1", episodesWatched: 24, totalEpisodes: 24 },
+                    { id: 456, title: "Инцидент в Сибуе", episodesWatched: 5, totalEpisodes: 23 }
+                ]
+            }
+        };
         
-        function applyTheme(theme, save = true) {
-            if (theme === 'sakura') document.body.removeAttribute('data-theme'); 
-            else document.body.setAttribute('data-theme', theme); 
-            if(save) { localStorage.setItem('glow_theme', theme); triggerToast("Тема зафиксирована!"); }
+        // Функция для загрузки популярных аниме с Шикимори
+        async function loadShikimoriAnime() {
+            try {
+                // Запрос к API Шикимори (получаем топ-10 онгоингов/аниме)
+                const response = await fetch('https://shikimori.one/api/animes?limit=10&order=popularity&kind=tv');
+                const animes = await response.json();
+                
+                const grid = document.querySelector('.anime-grid');
+                grid.innerHTML = ''; // Очищаем старые заглушки
+        
+                animes.forEach(anime => {
+                    // У Шикимори относительные ссылки на постеры, делаем их полными
+                    const posterUrl = `https://shikimori.one${anime.image.original}`;
+                    
+                    grid.innerHTML += `
+                        <div class="anime-card" data-shiki-id="${anime.id}">
+                            <div class="poster-wrapper">
+                                <span class="badge badge-type">${anime.kind}</span>
+                                <span class="badge badge-episodes">📺 ${anime.episodes_aired}/${anime.episodes || '??'}</span>
+                                <img src="${posterUrl}" alt="${anime.russian || anime.name}">
+                            </div>
+                            <div class="anime-info">
+                                <div class="anime-title">${anime.russian || anime.name}</div>
+                                <button onclick="addAnimeToUserList(${anime.id}, '${anime.russian || anime.name}', '${posterUrl}')" 
+                                        style="background:#ff9f43; border:none; padding:6px; border-radius:6px; width:100%; font-weight:700; cursor:pointer; margin-top:8px;">
+                                    Добавить в список
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Ошибка при подключении к Шикимори:", error);
+            }
         }
-
-        function applyGeometry(style, save = true) {
-            document.getElementById('geoRounded').classList.remove('active');
-            document.getElementById('geoSharp').classList.remove('active');
-            if (style === 'sharp') { document.body.setAttribute('data-geometry', 'sharp'); document.getElementById('geoSharp').classList.add('active'); }
-            else { document.body.removeAttribute('data-geometry'); document.getElementById('geoRounded').classList.add('active'); }
-            if(save) { localStorage.setItem('glow_geometry', style); triggerToast("Геометрия сохранена!"); }
+        
+        // Запускаем при загрузке страницы вместо старой loadRatings
+        document.addEventListener("DOMContentLoaded", () => {
+            loadShikimoriAnime();
+            // твой остальной код (проверка авторизации и чат)...
+        });        
+        
+        // Хранилище списков пользователя (вместо старых массивов)
+        let myAnimeList = JSON.parse(localStorage.getItem('user_anime_list')) || {};
+        
+        async function addAnimeToUserList(animeId, animeTitle, posterUrl) {
+            try {
+                // 1. Запрашиваем франшизу этого аниме у Шикимори
+                const res = await fetch(`https://shikimori.one/api/animes/${animeId}/franchise`);
+                const franchiseData = await res.json();
+                
+                // Ключом для группировки сделаем ID корневой франшизы (links[0] или имя)
+                // Если Шикимори не вернул франшизу, берем ID самого аниме как базовый
+                const franchiseKey = franchiseData.links && franchiseData.links.length > 0 
+                    ? franchiseData.links[0].target_id 
+                    : animeId;
+        
+                // 2. Проверяем, есть ли уже это аниме (эта франшиза) в списке
+                if (!myAnimeList[franchiseKey]) {
+                    // Если франшизы нет, создаем новую общую карточку
+                    myAnimeList[franchiseKey] = {
+                        mainTitle: animeTitle.replace(/ (Сезон \d+|Часть \d+)/i, ''), // Убираем приписку сезона для главного имени
+                        poster: posterUrl,
+                        seasons: []
+                    };
+                }
+        
+                // 3. Проверяем, не добавлен ли уже конкретно этот сезон
+                const seasonExists = myAnimeList[franchiseKey].seasons.some(s => s.id === animeId);
+                
+                if (!seasonExists) {
+                    // Добавляем сезон внутрь франшизы
+                    myAnimeList[franchiseKey].seasons.push({
+                        id: animeId,
+                        title: animeTitle,
+                        status: "Смотрю"
+                    });
+                    alert(`«${animeTitle}» добавлен в вашу франшизу!`);
+                } else {
+                    alert("Этот сезон уже есть в вашем списке!");
+                }
+        
+                // 4. Сохраняем в локалку и обновляем счетчики
+                localStorage.setItem('user_anime_list', JSON.stringify(myAnimeList));
+                updateStats();
+        
+            } catch (error) {
+                console.error(" Не удалось сгруппировать по франшизе:", error);
+                // Резервный вариант, если API упало — добавить просто как отдельный тайтл
+            }
         }
-
-        function applyFontSize(size, save = true) {
-            document.getElementById('fontSmall').classList.remove('active');
-            document.getElementById('fontNormal').classList.remove('active');
-            document.getElementById('fontLarge').classList.remove('active');
+        
+        function updateStats() {
+            // Количество уникальных аниме — это просто количество ключей в объекте франшиз!
+            const uniqueAnimeCount = Object.keys(myAnimeList).length;
             
-            const btnId = `font${size.charAt(0).toUpperCase() + size.slice(1)}`;
-            if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active');
-            
-            if (size === 'normal') document.body.removeAttribute('data-font'); 
-            else document.body.setAttribute('data-font', size);
-            
-            if(save) { localStorage.setItem('glow_font', size); triggerToast("Шрифт зафиксирован!"); }
-        }
-
-        function toggleOvercast() {
-            const btn = document.getElementById('overcastToggle');
-            document.body.classList.toggle('overcast-mode');
-            const isActive = document.body.classList.contains('overcast-mode');
-            localStorage.setItem('glow_overcast', isActive);
-            btn.innerText = isActive ? "☁️ : ВКЛ" : "☁️ Включить пасмурный режим";
-            triggerToast(isActive ? "Пасмурный фильтр сохранен" : "Пасмурный режим отключен");
+            // Выводим это число в профиль (вместо старого статичного счетчика)
+            // Допустим, выведем в поле "Дней" или создадим новое поле
+            console.log("Уникальных аниме в списке:", uniqueAnimeCount);
         }
     </script>
 </body>
