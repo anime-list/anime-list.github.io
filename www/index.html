@@ -3,10 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <title>AfterGlow Anime</title>
     <style>
-        /* --- Общие настройки и обнуление --- */
+        /* --- Динамические Темы Оформления --- */
+        body.theme-dark {
+            --bg-color: #0f131a;
+            --card-bg: #161b26;
+            --text-color: #ffffff;
+            --accent-color: #ff9f43;
+            --border-color: #232b3d;
+            --input-bg: #1c2230;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+        body.theme-light {
+            --bg-color: #f5f6f8;
+            --card-bg: #ffffff;
+            --text-color: #1c2230;
+            --accent-color: #007aff;
+            --border-color: #d1d5db;
+            --input-bg: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body.theme-neon {
+            --bg-color: #0d0214;
+            --card-bg: #1a0b2e;
+            --text-color: #00ffff;
+            --accent-color: #ff007f;
+            --border-color: #390099;
+            --input-bg: #240046;
+            --shadow-color: rgba(255, 0, 127, 0.3);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,27 +44,26 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Эмуляция мобильного телефона на десктопе */
         body {
-            background-color: #0f131a;
-            color: #ffffff;
-            padding-bottom: 95px; /* Увеличенный отступ под парящий компактный таббар */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); 
             overflow-x: hidden;
             max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
-            border-left: 1px solid #1c2230;
-            border-right: 1px solid #1c2230;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
             position: relative;
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* --- Компоненты приложения --- */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px;
-            background: #0f131a;
+            background: var(--bg-color);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -46,6 +74,7 @@
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
+            color: var(--accent-color);
         }
 
         .screen {
@@ -57,7 +86,6 @@
             display: block;
         }
 
-        /* --- Сетка аниме --- */
         .section-title {
             font-size: 20px;
             font-weight: 700;
@@ -81,14 +109,15 @@
         }
 
         .anime-card {
-            background: #161b26;
+            background: var(--card-bg);
             border-radius: 14px;
             overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, background 0.3s;
         }
         
         .anime-card:active {
@@ -99,7 +128,7 @@
             position: relative;
             width: 100%;
             padding-top: 140%; 
-            background: #202736;
+            background: var(--input-bg);
         }
 
         .poster-wrapper img {
@@ -118,6 +147,7 @@
             font-size: 11px;
             font-weight: 700;
             z-index: 2;
+            color: #fff;
         }
 
         .badge-rank {
@@ -156,7 +186,7 @@
             font-size: 14px;
             font-weight: 500;
             line-height: 1.3;
-            color: #e1e6eb;
+            color: var(--text-color);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -165,13 +195,12 @@
             height: 36px;
         }
 
-        /* Рейтинг звёзд */
         .rating-box {
             display: flex;
             flex-direction: column;
             gap: 4px;
             margin-top: auto;
-            border-top: 1px solid #232b3d;
+            border-top: 1px solid var(--border-color);
             padding-top: 8px;
         }
         .stars-container {
@@ -185,14 +214,13 @@
             transition: color 0.2s;
         }
         .star.active {
-            color: #ff9f43;
+            color: var(--accent-color);
         }
         .rating-stats {
             font-size: 11px;
             color: #8a94a6;
         }
 
-        /* --- Индикатор загрузки --- */
         .loading-text {
             text-align: center;
             color: #8a94a6;
@@ -205,13 +233,12 @@
             grid-column: span 2;
             text-align: center;
             padding: 20px;
-            color: #ff9f43;
+            color: var(--accent-color);
             font-size: 14px;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
-        /* --- МОДАЛЬНОЕ ОКНО --- */
+        /* --- МОДАЛЬНЫЕ ОКНА --- */
         .modal-overlay {
             position: fixed;
             top: 0; bottom: 0;
@@ -230,14 +257,15 @@
             display: flex;
         }
         .modal-content {
-            background: #161b26;
-            border-top: 2px solid #232b3d;
+            background: var(--card-bg);
+            border-top: 2px solid var(--border-color);
             border-radius: 24px 24px 0 0;
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
             animation: slideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            color: var(--text-color);
         }
         @keyframes slideUp {
             from { transform: translateY(100%); }
@@ -265,7 +293,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, #161b26, rgba(22, 27, 38, 0.4));
+            background: linear-gradient(to top, var(--card-bg), rgba(22, 27, 38, 0.4));
         }
         .modal-main-body {
             padding: 0 20px 30px 20px;
@@ -285,7 +313,7 @@
             object-fit: cover;
             border-radius: 14px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            border: 2px solid #232b3d;
+            border: 2px solid var(--border-color);
         }
         .modal-titles {
             flex: 1;
@@ -306,10 +334,10 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            background: #0f131a;
+            background: var(--bg-color);
             padding: 16px;
             border-radius: 16px;
-            border: 1px solid #1c2230;
+            border: 1px solid var(--border-color);
             margin-bottom: 16px;
         }
         .info-cell {
@@ -326,7 +354,7 @@
         .info-cell .value {
             font-size: 14px;
             font-weight: 700;
-            color: #ff9f43;
+            color: var(--accent-color);
         }
 
         .modal-status-group {
@@ -336,9 +364,9 @@
             margin-bottom: 12px;
         }
         .modal-btn-action {
-            background: #1c2230;
-            border: 1px solid #232b3d;
-            color: #e1e6eb;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
             padding: 10px;
             border-radius: 10px;
             font-size: 13px;
@@ -350,7 +378,7 @@
         .modal-btn-action.active-completed { background: rgba(40, 167, 69, 0.2); border-color: #28a745; color: #28a745; }
         .modal-btn-action.active-dropped { background: rgba(255, 77, 77, 0.2); border-color: #ff4d4d; color: #ff4d4d; }
 
-        /* --- Экран профиля --- */
+        /* --- Профиль --- */
         .profile-container {
             display: flex;
             flex-direction: column;
@@ -362,10 +390,10 @@
             width: 110px;
             height: 110px;
             border-radius: 50%;
-            border: 3px solid #ff9f43;
+            border: 3px solid var(--accent-color);
             object-fit: cover;
             margin-bottom: 12px;
-            background: #161b26;
+            background: var(--card-bg);
         }
 
         .profile-name {
@@ -377,7 +405,7 @@
 
         .profile-status {
             font-size: 14px;
-            color: #ff9f43;
+            color: var(--accent-color);
             margin-bottom: 20px;
         }
 
@@ -390,8 +418,8 @@
         }
 
         .stat-card {
-            background: #161b26;
-            border: 1px solid #232b3d;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 12px;
             text-align: center;
@@ -415,28 +443,13 @@
             gap: 8px;
         }
 
-        .admin-toggle-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            width: 100%;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
         /* --- Чат --- */
         .chat-wrapper {
             display: flex;
             flex-direction: column;
             height: calc(100vh - 165px);
-            background: #161b26;
-            border: 1px solid #232b3d;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             overflow: hidden;
         }
@@ -458,33 +471,34 @@
             height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            background: #202736;
+            background: var(--input-bg);
         }
         .message-body {
-            background: #202736;
+            background: var(--input-bg);
             padding: 10px 14px;
             border-radius: 0 14px 14px 14px;
             max-width: 85%;
+            color: var(--text-color);
         }
         .message-row.my-msg {
             flex-direction: row-reverse;
         }
         .message-row.my-msg .message-body {
-            background: #ff9f43;
+            background: var(--accent-color);
             color: #000;
             border-radius: 14px 0 14px 14px;
         }
         .message-username {
             font-size: 12px;
             font-weight: 700;
-            color: #ff9f43;
+            color: var(--accent-color);
             margin-bottom: 2px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         .message-row.my-msg .message-username {
-            color: #fff;
+            color: #222;
             justify-content: flex-end;
         }
         .message-text {
@@ -495,14 +509,14 @@
         .chat-input-area {
             display: flex;
             padding: 12px;
-            background: #121620;
-            border-top: 1px solid #1c2230;
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
             gap: 8px;
         }
         .chat-input-area input {
             flex-grow: 1;
-            background: #1c2230;
-            border: 1px solid #232b3d;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 12px;
             color: #fff;
@@ -510,7 +524,7 @@
             font-size: 14px;
         }
         .chat-input-area button {
-            background: #ff9f43;
+            background: var(--accent-color);
             color: #000;
             border: none;
             padding: 0 16px;
@@ -519,56 +533,24 @@
             cursor: pointer;
         }
 
-        .mod-panel {
-            margin-top: 6px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            padding-top: 6px;
-        }
-        .mod-title {
-            font-size: 10px;
-            color: #8a94a6;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-        .mod-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 4px;
-        }
-        .mod-btn {
-            background: rgba(255, 77, 77, 0.15);
-            color: #ff4d4d;
-            border: 1px solid rgba(255, 77, 77, 0.3);
-            font-size: 10px;
-            padding: 3px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .mod-btn.unmod-btn {
-            background: rgba(40, 167, 69, 0.15);
-            color: #28a745;
-            border: 1px solid rgba(40, 167, 69, 0.3);
-        }
-
-        /* --- ОБНОВЛЕННЫЙ: ПАРЯЩИЙ ПОЛУПРОЗРАЧНЫЙ ТАББАР --- */
+        /* --- ТАББАР --- */
         .bottom-nav {
             position: fixed;
-            bottom: 16px; /* Элегантный отступ снизу */
+            bottom: calc(14px + env(safe-area-inset-bottom, 0px)); 
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 32px); /* Учитываем боковые поля */
-            max-width: 448px; /* Идеально вписывается в 480px интерфейса */
-            height: 58px; /* Более компактная высота */
-            background: rgba(18, 22, 32, 0.75); /* Мягкая полупрозрачность */
-            backdrop-filter: blur(20px); /* Сильный Frosted Glass эффект */
+            width: calc(100% - 32px); 
+            max-width: 448px; 
+            height: 58px; 
+            background: rgba(18, 22, 32, 0.85); 
+            backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08); /* Тонкая стеклянная неоновая граница */
-            border-radius: 20px; /* Сильное скругление краев */
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 20px; 
             display: flex;
             justify-content: space-around;
             align-items: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); /* Объемная глубокая тень */
+            box-shadow: 0 8px 32px var(--shadow-color); 
             z-index: 100;
         }
 
@@ -589,7 +571,7 @@
         }
 
         .nav-item.active {
-            color: #ff9f43;
+            color: var(--accent-color);
         }
 
         .nav-item svg {
@@ -612,17 +594,44 @@
 
         .auth-input {
             width: 100%;
-            background: #1c2230;
-            border: 1px solid #232b3d;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 12px;
             color: #fff;
             outline: none;
             font-size: 14px;
         }
+
+        .screenshot-img {
+            width: 140px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        /* Поле ввода с кнопкой сброса */
+        .search-input-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .search-clear-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8a94a6;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+        }
     </style>
 </head>
-<body>
+<body class="theme-dark">
 
     <!-- Шапка -->
     <header class="header">
@@ -635,21 +644,28 @@
         <div class="anime-grid" id="shiki-watching-grid"></div>
         
         <h2 class="section-title">Лента Аниме</h2>
-        <input type="text" id="anime-search" placeholder="Beta (Не работает)" 
-       oninput="filterSearch(this.value)"
-       style="width:100%; padding:12px; background:#161b26; border:1px solid #232b3d; border-radius:12px; color:#fff; margin-bottom:10px;">
-       
 
-<script>
-function filterSearch(query) {
-    const cards = document.querySelectorAll('.anime-card');
-    cards.forEach(card => {
-        const title = card.querySelector('.anime-title').innerText.toLowerCase();
-        card.style.display = title.includes(query.toLowerCase()) ? 'flex' : 'none';
-    });
-}
+        <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px;">
+            <div class="search-input-wrap">
+                <input type="text" id="global-anime-search" placeholder="🔍 Найти аниме по всей базе..." oninput="handleGlobalSearch(this.value)" style="width:100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 36px 12px 12px; color: #fff; outline: none; font-size: 14px;">
+                <button class="search-clear-btn" id="search-clear-btn" onclick="clearSearchInput()">✕</button>
+            </div>
+            
+            <div style="display: flex; gap: 8px;">
+                <select id="home-filter-kind" onchange="handleHomeFilterChange()" style="flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                    <option value="">Все типы</option>
+                    <option value="tv">TV Сериал</option>
+                    <option value="movie">Фильм</option>
+                    <option value="ova">OVA</option>
+                    <option value="ona">ONA</option>
+                </select>
+                <select id="home-filter-order" onchange="handleHomeFilterChange()" style="flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                    <option value="popularity">Популярные</option>
+                    <option value="ranked">По рейтингу</option>
+                </select>
+            </div>
+        </div>
 
-</script>
         <div class="anime-grid" id="shiki-tracking-grid">
             <div class="loading-text">Загрузка списков...</div>
         </div>
@@ -659,15 +675,15 @@ function filterSearch(query) {
     <section id="screen-lists" class="screen">
         <h2 class="section-title">Мои Списки</h2>
         
-        <div style="background: #161b26; border: 1px solid #232b3d; border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px;">
             <div style="display: flex; gap: 8px;">
-                <select id="filter-status" onchange="renderMyLists()" style="flex: 1; background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                <select id="filter-status" onchange="renderMyLists()" style="flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
                     <option value="all">Все списки</option>
                     <option value="watching">🍿 Смотрю</option>
                     <option value="completed">✅ Просмотрено</option>
                     <option value="dropped">❌ Брошено</option>
                 </select>
-                <select id="filter-type" onchange="renderMyLists()" style="flex: 1; background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                <select id="filter-type" onchange="renderMyLists()" style="flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
                     <option value="all">Все типы</option>
                     <option value="tv">TV Сериал</option>
                     <option value="movie">Фильм</option>
@@ -675,8 +691,8 @@ function filterSearch(query) {
                     <option value="ona">ONA</option>
                 </select>
             </div>
-            <select id="filter-sort" onchange="renderMyLists()" style="background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
-                <option value="name">Сортировка: По названию</option>
+            <select id="filter-sort" onchange="renderMyLists()" style="background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                <option value="name">Сортировка: По названиям</option>
                 <option value="score-desc">Сортировка: Моя оценка (Сначала высокие)</option>
                 <option value="score-asc">Сортировка: Моя оценка (Сначала низкие)</option>
             </select>
@@ -699,15 +715,15 @@ function filterSearch(query) {
     <!-- ЭКРАН 4: ПРОФИЛЬ -->
     <section id="screen-profile" class="screen">
         <div class="profile-container">
-            <img src="user_avatar.png" alt="Аватар" class="avatar-main" id="user-avatar">
+            <img src="https://api.iconify.design/fluent-emoji:cat-face.svg" alt="Аватар" class="avatar-main" id="user-avatar">
             <h1 class="profile-name" id="user-name">Гость</h1>
             <p class="profile-status" id="user-role-display">Гостевой режим</p>
 
-            <div id="profile-authorized-view" style="width: 100%;"></div>
+            <div id="profile-authorized-view" style="width: 100%; display: none;">
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Дней</div>
-                        <div class="stat-value">14</div>
+                        <div class="stat-value" id="user-days-stat">0.0</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Средняя</div>
@@ -715,36 +731,126 @@ function filterSearch(query) {
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Эпизодов</div>
-                        <div class="stat-value">54</div>
+                        <div class="stat-value" id="user-episodes-stat">0</div>
                     </div>
                 </div>
-                <div class="info-cell" style="margin-top:15px; background:#161b26; padding:12px; border-radius:12px;">
-    <span class="label">Любимый жанр</span>
-    <div style="font-size:14px; font-weight:700; color:#ff9f43;">Сёнэн / Психология</div>
-</div>
+
+                <div style="margin-bottom: 20px; width: 100%;">
+                    <h3 style="font-size:12px; color:#8a94a6; text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px;">Достижения</h3>
+                    <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:5px;">
+                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding:10px; border-radius:10px; min-width:90px; text-align:center;">🏆<br><span style="font-size:11px; font-weight:600;">Ветеран</span></div>
+                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding:10px; border-radius:10px; min-width:90px; text-align:center;">🔥<br><span style="font-size:11px; font-weight:600;">Анимешник</span></div>
+                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding:10px; border-radius:10px; min-width:90px; text-align:center;">💬<br><span style="font-size:11px; font-weight:600;">Душа чата</span></div>
+                    </div>
+                </div>
+
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding:14px; border-radius:14px; margin-bottom:20px; width:100%;">
+                    <span style="font-size:11px; color:#8a94a6; text-transform:uppercase; display:block; margin-bottom:4px;">Любимые Жанры</span>
+                    <div style="font-size:14px; font-weight:700; color: var(--accent-color);">Сёнэн, Фэнтези, Экшен, Экспериментальное</div>
+                </div>
+
+                <div id="admin-management-box" style="display:none; width:100%; margin-bottom:20px; background:var(--card-bg); border:1px solid var(--border-color); padding:14px; border-radius:14px;">
+                    <h3 style="font-size:12px; color:var(--accent-color); text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px;">👑 Добавление Администраторов</h3>
+                    <div style="display:flex; gap:8px;">
+                        <input type="email" id="new-admin-email" placeholder="Google Email нового админа" class="auth-input" style="font-size:12px; padding:10px;">
+                        <button onclick="addNewAdminEmail()" style="background:var(--accent-color); color:#000; border:none; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer; font-size:12px; white-space:nowrap;">Выдать права</button>
+                    </div>
+                    <div id="admin-list-display" style="margin-top:10px; font-size:11px; color:#8a94a6;"></div>
+                </div>
 
                 <div class="menu-list">
-                    <button class="admin-toggle-btn" onclick="toggleAdminMode()">Панель Создателя AfterGlow</button>
+                    <button class="modal-btn-action" style="background: var(--accent-color); color: #000; padding:14px; font-weight:700; border-radius:12px;" onclick="openSettingsModal()">⚙️ Настройки и Профиль</button>
                     <button class="logout-btn" onclick="logout()">Выйти из аккаунта</button>
                 </div>
             </div>
 
-            <div id="profile-guest-view" style="width: 100%; display: none; margin-top: 10px;">
-                <div style="background: #161b26; border: 1px solid #232b3d; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
-                    <h3 style="font-size: 15px; font-weight: 700; text-align: center; color: #ff9f43; text-transform: uppercase; letter-spacing: 0.5px;">Синхронизация профиля</h3>
+            <!-- Вход для гостей -->
+            <div id="profile-guest-view" style="width: 100%; display: block; margin-top: 10px;">
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                    <h3 style="font-size: 15px; font-weight: 700; text-align: center; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.5px;">Синхронизация профиля</h3>
+                    
+                    <div id="google-btn-container" style="display: flex; justify-content: center; min-height: 44px;"></div>
+
+                    <div style="color: #566275; font-size: 11px; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0;">или почта</div>
                     <input type="email" id="email-input" class="auth-input" placeholder="Введите Email">
                     <input type="password" id="password-input" class="auth-input" placeholder="Введите Пароль">
-                    <button onclick="loginWithEmail()" style="background: #ff9f43; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 4px;">Войти через Почту</button>
-                    <div style="color: #566275; font-size: 11px; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0;">или</div>
-                    <div id="google-btn-container" style="display: flex; justify-content: center;">
-                        <div id="g_id_onload" data-client_id="1050181733311-go9h4sbe741t3aka8cf5o3gss6rjg1va.apps.googleusercontent.com" data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin" data-auto_prompt="false"></div>
-                        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_black" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
-                    </div>
+                    <button onclick="loginWithEmail()" style="background: var(--input-bg); border: 1px solid var(--border-color); color: #fff; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px;">Войти через Почту</button>
                 </div>
             </div>
         </div>
-        <button class="admin-toggle-btn" style="background:#566275;" onclick="toggleSettings()">⚙️ Настройки</button>
     </section>
+
+    <!-- НАСТРОЙКИ И РЕДАКТИРОВАНИЕ ПРОФИЛЯ МОДАЛКА -->
+    <div class="modal-overlay" id="settings-modal" onclick="closeSettingsModal()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="padding: 20px; border-radius: 24px 24px 0 0; max-height:85vh; overflow-y:auto;">
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--accent-color);">⚙️ Настройки приложения и Профиль</h3>
+            
+            <!-- РЕДАКТИРОВАНИЕ ПРОФИЛЯ -->
+            <div style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 14px; border-radius: 16px; margin-bottom: 16px;">
+                <div style="font-size: 12px; font-weight:700; color:var(--accent-color); text-transform: uppercase; margin-bottom: 12px;">👤 Мой Профиль</div>
+
+                <!-- Изменение Аватара -->
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+                    <img id="settings-avatar-preview" src="https://api.iconify.design/fluent-emoji:cat-face.svg" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover;">
+                    <div style="flex:1;">
+                        <label style="display: block; font-size: 11px; color: #8a94a6; margin-bottom: 4px;">Загрузить фото с устройства:</label>
+                        <input type="file" id="settings-avatar-file" accept="image/*" onchange="handleAvatarFileUpload(event)" style="font-size: 11px; color: #8a94a6; width:100%;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-size: 11px; color: #8a94a6; margin-bottom: 4px;">Или вставьте URL картинки:</label>
+                    <input type="text" id="settings-avatar-url-input" class="auth-input" placeholder="https://..." style="font-size: 12px; padding: 8px 10px;">
+                </div>
+
+                <!-- Изменение Ника -->
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-size: 11px; color: #8a94a6; margin-bottom: 4px;">Имя / Никнейм:</label>
+                    <input type="text" id="settings-username-input" class="auth-input" placeholder="Ваш никнейм" style="font-size: 13px; font-weight:600;">
+                </div>
+
+                <!-- Изменение Статуса -->
+                <div>
+                    <label style="display: block; font-size: 11px; color: #8a94a6; margin-bottom: 4px;">Персональный статус:</label>
+                    <input type="text" id="settings-status-input" class="auth-input" placeholder="Ваш статус..." style="font-size: 12px;">
+                </div>
+            </div>
+
+            <!-- ВНЕШНИЙ ВИД И ДИЗАЙН -->
+            <div style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 14px; border-radius: 16px; margin-bottom: 16px;">
+                <div style="font-size: 12px; font-weight:700; color:var(--accent-color); text-transform: uppercase; margin-bottom: 12px;">🎨 Внешний вид</div>
+
+                <div style="margin-bottom: 12px;">
+                    <span class="label" style="font-size: 11px; color: #8a94a6; display:block; margin-bottom: 4px;">Тема оформления</span>
+                    <select id="theme-select" onchange="changeTheme(this.value)" style="width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                        <option value="dark">🌑 Ночная (AfterGlow)</option>
+                        <option value="light">☀️ Светлая</option>
+                        <option value="neon">👾 Кибер-Неон</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span class="label" style="font-size: 11px; color: #8a94a6; display:block; margin-bottom: 4px;">Акцентный цвет интерфейса</span>
+                    <select id="accent-color-select" onchange="changeAccentColor(this.value)" style="width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none;">
+                        <option value="#ff9f43">🍊 Оранжевый AfterGlow</option>
+                        <option value="#ff007f">💖 Неоновый Розовый</option>
+                        <option value="#007aff">💙 Морской Голубой</option>
+                        <option value="#28a745">🟢 Изумрудный Зеленый</option>
+                        <option value="#9b59b6">💜 Фиолетовый Кибер</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ОЧИСТКА КЭША -->
+            <div style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 14px; border-radius: 16px; margin-bottom: 16px;">
+                <div style="font-size: 12px; font-weight:700; color:#ff4d4d; text-transform: uppercase; margin-bottom: 6px;">🗑 Память и Кэш</div>
+                <div style="font-size: 11px; color:#8a94a6; margin-bottom:10px;">Сбросить сохраненный кэш списков, если данные перестали загружаться.</div>
+                <button onclick="clearAppCache()" style="background: rgba(255,77,77,0.15); border: 1px solid #ff4d4d; color: #ff4d4d; width: 100%; padding: 10px; border-radius: 8px; font-weight:600; font-size: 12px; cursor: pointer;">Очистить локальный кэш</button>
+            </div>
+
+            <button class="modal-btn-action" style="width:100%; background: var(--accent-color); color:#000; font-weight:800; padding:14px; border-radius:12px; font-size:14px;" onclick="saveProfileSettings()">Сохранить настройки</button>
+        </div>
+    </div>
 
     <!-- ТАББАР -->
     <nav class="bottom-nav">
@@ -766,7 +872,7 @@ function filterSearch(query) {
         </button>
     </nav>
 
-    <!-- МОДАЛКА -->
+    <!-- МОДАЛКА АНИМЕ -->
     <div class="modal-overlay" id="anime-profile-modal" onclick="closeAnimeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close-btn" onclick="closeAnimeModal()">✕</button>
@@ -797,7 +903,20 @@ function filterSearch(query) {
                         <span class="value" id="modal-status">-</span>
                     </div>
                 </div>
-                <div style="background: #0f131a; padding: 14px; border-radius: 16px; border: 1px solid #1c2230; margin-bottom: 14px;">
+
+                <div style="background: var(--bg-color); padding: 14px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 14px;">
+                    <div style="font-size: 11px; color: #8a94a6; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Официальное Описание:</div>
+                    <p id="modal-description" style="font-size: 13px; line-height: 1.5; color: var(--text-color); max-height: 140px; overflow-y: auto; white-space: pre-line;">Загрузка информации...</p>
+                </div>
+
+                <div style="background: var(--bg-color); padding: 14px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 14px;">
+                    <div style="font-size: 11px; color: #8a94a6; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Галерея кадров (Рисовка):</div>
+                    <div id="modal-gallery" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
+                        <span style="font-size:12px; color:#566275;">Кадры не найдены.</span>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-color); padding: 14px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 14px;">
                     <div style="font-size: 11px; color: #8a94a6; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Добавить в список:</div>
                     <div class="modal-status-group">
                         <button id="m-btn-watching" class="modal-btn-action" onclick="changeUserAnimeStatus('watching')">Смотрю</button>
@@ -806,7 +925,7 @@ function filterSearch(query) {
                         <button id="m-btn-none" class="modal-btn-action" style="color: #ff4d4d;" onclick="changeUserAnimeStatus('none')">Удалить</button>
                     </div>
                     <div style="font-size: 11px; color: #8a94a6; text-transform: uppercase; margin: 12px 0 6px 0; letter-spacing: 0.5px;">Моя оценка (10 звёзд):</div>
-                    <select id="modal-user-score-10" onchange="changeUserAnimeScore10(this.value)" style="width: 100%; background: #1c2230; border: 1px solid #232b3d; border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; outline: none;">
+                    <select id="modal-user-score-10" onchange="changeUserAnimeScore10(this.value)" style="width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; outline: none;">
                         <option value="0">Без оценки</option>
                         <option value="10">⭐ 10 — Шедевр</option>
                         <option value="9">⭐ 9 — Великолепно</option>
@@ -828,33 +947,53 @@ function filterSearch(query) {
     <script>
         const SHIKIMORI_BASE = "https://shikimori.one";
         const BACKEND_URL = "https://anime-list-backend-eu.onrender.com"; 
+        const GOOGLE_CLIENT_ID = "1050181733311-go9h4sbe741t3aka8cf5o3gss6rjg1va.apps.googleusercontent.com";
+
+        let adminEmailsList = JSON.parse(localStorage.getItem("afterglow_admin_emails")) || [];
 
         let currentPage = 1;
         let isAnimeLoading = false;
         let hasMoreAnime = true;
+        let isSearchMode = false;
+        
         let loadedAnimesCache = {}; 
+        let cachedDefaultAnimeList = []; 
         let currentModalAnimeId = null; 
 
         let currentUser = {
             username: "Гость",
             first_name: "Гость",
-            photo_url: "user_avatar.png", 
+            email: "",
+            status: "Гостевой режим",
+            photo_url: "https://api.iconify.design/fluent-emoji:cat-face.svg", 
             role: "user", 
             isGuest: true,
             isMuted: false,
             isBanned: false
         };
 
-        let chatMessages = [];
+        let chatMessages = JSON.parse(localStorage.getItem("afterglow_chat_store")) || [];
         let userAnimeLists = {}; 
         let activeMutes = new Map(); 
         let activeBans = new Map();  
 
         document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("afterglow_theme") || "dark";
+            document.body.className = "theme-" + savedTheme;
+            document.getElementById("theme-select").value = savedTheme;
+
+            const savedAccent = localStorage.getItem("afterglow_accent_color");
+            if (savedAccent) {
+                document.documentElement.style.setProperty('--accent-color', savedAccent);
+                const accentSelect = document.getElementById("accent-color-select");
+                if (accentSelect) accentSelect.value = savedAccent;
+            }
+
             const savedUser = localStorage.getItem("user_profile");
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
             }
+            
             applyUserData(currentUser);
             loadUserListsFromStorage();
             
@@ -863,21 +1002,81 @@ function filterSearch(query) {
             renderChat();
 
             window.addEventListener("scroll", handleWindowScroll);
+            initGoogleAuth();
         });
 
-        async function fetchShikimoriAnime(page = 1) {
-            if (isAnimeLoading || !hasMoreAnime) return;
+        /* --- ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ (TOAST) --- */
+        function showToast(message, type = "success") {
+            let container = document.getElementById("toast-container");
+            if (!container) {
+                container = document.createElement("div");
+                container.id = "toast-container";
+                container.style.cssText = "position:fixed; bottom:85px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:8px; pointer-events:none; width:90%; max-width:400px;";
+                document.body.appendChild(container);
+            }
+            const toast = document.createElement("div");
+            toast.style.cssText = `background:${type === 'error' ? '#ff4d4d' : 'var(--accent-color)'}; color:#000; font-weight:700; font-size:13px; padding:12px 18px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.5); text-align:center; transition: all 0.3s ease; opacity:0; transform: translateY(10px);`;
+            toast.innerText = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 20);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+
+        function initGoogleAuth() {
+            if (window.google && google.accounts && google.accounts.id) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleLogin,
+                    auto_select: false
+                });
+
+                const btnBox = document.getElementById("google-btn-container");
+                if (btnBox) {
+                    google.accounts.id.renderButton(btnBox, {
+                        theme: "filled_black",
+                        size: "large",
+                        shape: "rectangular",
+                        text: "signin_with",
+                        logo_alignment: "left",
+                        width: 250
+                    });
+                }
+            } else {
+                setTimeout(initGoogleAuth, 400);
+            }
+        }
+
+        async function fetchShikimoriAnime(page = 1, forceReset = false) {
+            if (isAnimeLoading || (!hasMoreAnime && !forceReset) || isSearchMode) return;
             isAnimeLoading = true;
 
             if (page > 1) showScrollLoader();
 
             try {
-                const response = await fetch(`${BACKEND_URL}/api/animes?limit=12&page=${page}&order=popularity&kind=tv`);
+                const kind = document.getElementById("home-filter-kind").value;
+                const order = document.getElementById("home-filter-order").value;
+                
+                let url = `${BACKEND_URL}/api/animes?limit=12&page=${page}&order=${order}`;
+                if (kind) url += `&kind=${kind}`;
+
+                const response = await fetch(url);
                 if (!response.ok) throw new Error("Сбой сети бэкенда");
                 
                 const data = await response.json();
                 
                 if (!data || data.length === 0) {
+                    if (page === 1) {
+                        document.getElementById("shiki-tracking-grid").innerHTML = `<div class="loading-text">Ничего не найдено</div>`;
+                    }
                     hasMoreAnime = false;
                     removeScrollLoader();
                     return;
@@ -887,13 +1086,19 @@ function filterSearch(query) {
                     loadedAnimesCache[anime.id] = anime;
                 });
 
-                renderAnimeCards(data, page === 1);
+                if (page === 1) {
+                    cachedDefaultAnimeList = data;
+                    renderAnimeCards(data, true);
+                } else {
+                    cachedDefaultAnimeList = cachedDefaultAnimeList.concat(data);
+                    renderAnimeCards(data, false);
+                }
                 currentPage = page;
 
             } catch (err) {
                 console.error("Ошибка загрузки:", err);
                 if (page === 1) {
-                    document.getElementById("shiki-tracking-grid").innerHTML = `<div class="loading-text" style="color:#ff4d4d;">Сервер Render спит или вернул ошибку.</div>`;
+                    document.getElementById("shiki-tracking-grid").innerHTML = `<div class="loading-text" style="color:#ff4d4d;">Сервер временно недоступен.</div>`;
                 }
             } finally {
                 isAnimeLoading = false;
@@ -901,12 +1106,85 @@ function filterSearch(query) {
             }
         }
 
+        /* --- ИСПРАВЛЕННЫЙ И НАДЁЖНЫЙ ГЛОБАЛЬНЫЙ ПОИСК --- */
+        let searchTimeoutToken = null;
+        function handleGlobalSearch(query) {
+            clearTimeout(searchTimeoutToken);
+            const cleanQuery = query.trim();
+            const clearBtn = document.getElementById("search-clear-btn");
+
+            if (clearBtn) clearBtn.style.display = cleanQuery ? "block" : "none";
+
+            if (!cleanQuery) {
+                isSearchMode = false;
+                hasMoreAnime = true;
+                renderAnimeCards(cachedDefaultAnimeList, true);
+                return;
+            }
+
+            isSearchMode = true;
+            searchTimeoutToken = setTimeout(async () => {
+                const trackingGrid = document.getElementById("shiki-tracking-grid");
+                trackingGrid.innerHTML = `<div class="loading-text">Ищем по всей базе...</div>`;
+                
+                try {
+                    // Используем бэкенд или CORS-прокси для предотвращения ошибки блокировки CORS
+                    let searchUrl = `${BACKEND_URL}/api/animes?search=${encodeURIComponent(cleanQuery)}&limit=16`;
+                    let response = await fetch(searchUrl);
+                    
+                    // Резервный прокси на случай если бэкенд недоступен
+                    if (!response.ok) {
+                        searchUrl = `https://corsproxy.io/?` + encodeURIComponent(`https://shikimori.one/api/animes?search=${encodeURIComponent(cleanQuery)}&limit=16`);
+                        response = await fetch(searchUrl);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (!data || data.length === 0) {
+                        trackingGrid.innerHTML = `<div class="loading-text">По запросу "${cleanQuery}" ничего не найдено</div>`;
+                        return;
+                    }
+
+                    data.forEach(anime => {
+                        loadedAnimesCache[anime.id] = anime;
+                    });
+
+                    renderAnimeCards(data, true);
+                } catch (e) {
+                    console.error("Ошибка поиска:", e);
+                    trackingGrid.innerHTML = `<div class="loading-text" style="color:#ff4d4d;">Ошибка поиска. Попробуйте уточнить запрос.</div>`;
+                }
+            }, 500); 
+        }
+
+        function clearSearchInput() {
+            const input = document.getElementById("global-anime-search");
+            if (input) {
+                input.value = "";
+                handleGlobalSearch("");
+            }
+        }
+
+        function handleHomeFilterChange() {
+            if (isSearchMode) return;
+            hasMoreAnime = true;
+            fetchShikimoriAnime(1, true);
+        }
+
+        function getFullPosterUrl(imageObj) {
+            if (!imageObj) return "https://api.iconify.design/fluent-emoji:cat-face.svg";
+            const path = imageObj.original || imageObj.preview || "";
+            if (!path) return "https://api.iconify.design/fluent-emoji:cat-face.svg";
+            if (path.startsWith('http')) return path;
+            return SHIKIMORI_BASE + path;
+        }
+
         function renderAnimeCards(list, isFirstPage) {
             const trackingGrid = document.getElementById("shiki-tracking-grid");
             if (isFirstPage) trackingGrid.innerHTML = "";
 
             list.forEach((anime, index) => {
-                const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+                const posterUrl = getFullPosterUrl(anime.image);
                 const epText = anime.episodes_aired > 0 ? `📺 ${anime.episodes_aired} / ${anime.episodes || '??'}` : `📺 0 / ${anime.episodes || '??'}`;
 
                 const shikiScore = anime.score || "—";
@@ -923,7 +1201,7 @@ function filterSearch(query) {
                         <span class="badge badge-rank">${isFirstPage ? index + 1 : (currentPage - 1) * 12 + index + 1}</span>
                         <span class="badge badge-type">${anime.kind ? anime.kind.toUpperCase() : 'TV'}</span>
                         <span class="badge badge-episodes">${epText}</span>
-                        <img src="${posterUrl}" alt="${anime.russian || anime.name}" onerror="this.src='user_avatar.png'">
+                        <img src="${posterUrl}" alt="${anime.russian || anime.name}" onerror="this.src='https://api.iconify.design/fluent-emoji:cat-face.svg'">
                     </div>
                     <div class="anime-info">
                         <div class="anime-title">${anime.russian || anime.name}</div>
@@ -934,17 +1212,16 @@ function filterSearch(query) {
                                           onclick="event.stopPropagation(); quickRate('${anime.id}', ${num})">★</span>
                                 `).join('')}
                             </div>
-                            <div class="rating-stats">Шики: <span style="color:#fff; font-weight:600;">${shikiScore}</span> ${userScore > 0 ? `| Моя: <span style="color:#ff9f43; font-weight:600;">${userScore}</span>` : ''}</div>
+                            <div class="rating-stats">Шики: <span style="color:var(--text-color); font-weight:600;">${shikiScore}</span> ${userScore > 0 ? `| Моя: <span style="color:var(--accent-color); font-weight:600;">${userScore}</span>` : ''}</div>
                         </div>
                     </div>
                 `;
                 trackingGrid.appendChild(card);
             });
 
-            recalcUserAvg();
+            recalcProfileStats();
         }
 
-        // Честный и мгновенный клик по звездам на карточке ленты
         function quickRate(animeId, starsCount) {
             if (!userAnimeLists[animeId]) {
                 userAnimeLists[animeId] = { status: 'watching', score: 0 };
@@ -955,14 +1232,14 @@ function filterSearch(query) {
             refreshGridRatings();
             renderWatchingGrid();
             renderMyLists();
-            recalcUserAvg();
+            recalcProfileStats();
 
             if (currentModalAnimeId === animeId) {
                 document.getElementById("modal-user-score-10").value = starsCount * 2;
             }
+            showToast(`Оценка обновлена: ${starsCount * 2} / 10 ⭐`);
         }
 
-        // Обновление визуала оценок на всех видимых карточках без перерендеривания DOM структуры
         function refreshGridRatings() {
             document.querySelectorAll('.anime-card[data-anime-id]').forEach(card => {
                 const animeId = card.getAttribute('data-anime-id');
@@ -980,7 +1257,7 @@ function filterSearch(query) {
                 
                 const statsDiv = card.querySelector('.rating-stats');
                 if (statsDiv) {
-                    statsDiv.innerHTML = `Шики: <span style="color:#fff; font-weight:600;">${shikiScore}</span> ${userScore > 0 ? `| Моя: <span style="color:#ff9f43; font-weight:600;">${userScore}</span>` : ''}`;
+                    statsDiv.innerHTML = `Шики: <span style="color:var(--text-color); font-weight:600;">${shikiScore}</span> ${userScore > 0 ? `| Моя: <span style="color:var(--accent-color); font-weight:600;">${userScore}</span>` : ''}`;
                 }
             });
         }
@@ -996,7 +1273,7 @@ function filterSearch(query) {
                     const anime = loadedAnimesCache[id];
                     if (anime) {
                         hasItems = true;
-                        const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+                        const posterUrl = getFullPosterUrl(anime.image);
                         const epText = anime.episodes_aired > 0 ? `📺 ${anime.episodes_aired} / ${anime.episodes || '??'}` : `📺 0 / ${anime.episodes || '??'}`;
                         
                         const card = document.createElement("div");
@@ -1010,7 +1287,7 @@ function filterSearch(query) {
                             </div>
                             <div class="anime-info">
                                 <div class="anime-title">${anime.russian || anime.name}</div>
-                                <div style="font-size:11px; color:#ff9f43; font-weight:700;">🍿 В процессе</div>
+                                <div style="font-size:11px; color:var(--accent-color); font-weight:700;">🍿 В процессе</div>
                             </div>
                         `;
                         watchingGrid.appendChild(card);
@@ -1019,7 +1296,7 @@ function filterSearch(query) {
             });
 
             if (!hasItems) {
-                watchingGrid.innerHTML = `<div class="loading-text" style="grid-column: span 2; padding: 10px 0; font-size:12px; color:#566275;">Список пуст. Добавьте аниме через карточку.</div>`;
+                watchingGrid.innerHTML = `<div class="loading-text" style="grid-column: span 2; padding: 10px 0; font-size:12px; color:#566275;">Список пуст. Добавьте аниме из ленты.</div>`;
             }
         }
 
@@ -1053,16 +1330,16 @@ function filterSearch(query) {
             }
 
             if (filteredArray.length === 0) {
-                grid.innerHTML = `<div class="loading-text">Нет тайтлов, соответствующих фильтрам</div>`;
+                grid.innerHTML = `<div class="loading-text">Нет аниме в этом списке</div>`;
                 return;
             }
 
             filteredArray.forEach(obj => {
                 const anime = obj.anime;
                 const userScore = obj.item.score || 0;
-                const statusLabels = { watching: '🍿 Смотрю', completed: '✅ Готово', dropped: '❌ Брошено' };
+                const statusLabels = { watching: '🍿 Смотрю', completed: '✅ Просмотрено', dropped: '❌ Брошено' };
                 
-                const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+                const posterUrl = getFullPosterUrl(anime.image);
                 const card = document.createElement("div");
                 card.className = "anime-card";
                 card.setAttribute("onclick", `openAnimeModal('${obj.id}')`);
@@ -1074,7 +1351,7 @@ function filterSearch(query) {
                     <div class="anime-info">
                         <div class="anime-title">${anime.russian || anime.name}</div>
                         <div style="font-size: 11px; margin-top:4px; display:flex; flex-direction:column; gap:2px;">
-                            <span style="color:#ff9f43;">${statusLabels[obj.item.status]}</span>
+                            <span style="color:var(--accent-color);">${statusLabels[obj.item.status]}</span>
                             <span style="color:#8a94a6;">Моя оценка: <b>${userScore > 0 ? userScore + '/10' : '—'}</b></span>
                         </div>
                     </div>
@@ -1084,7 +1361,7 @@ function filterSearch(query) {
         }
 
         function handleWindowScroll() {
-            if (!document.getElementById("screen-home").classList.contains("active")) return;
+            if (!document.getElementById("screen-home").classList.contains("active") || isSearchMode) return;
             if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 150) {
                 if (!isAnimeLoading && hasMoreAnime) {
                     fetchShikimoriAnime(currentPage + 1);
@@ -1106,12 +1383,12 @@ function filterSearch(query) {
             if (loader) loader.remove();
         }
 
-        function openAnimeModal(animeId) {
+        async function openAnimeModal(animeId) {
             const anime = loadedAnimesCache[animeId];
             if (!anime) return;
 
             currentModalAnimeId = animeId;
-            const posterUrl = anime.image ? (SHIKIMORI_BASE + anime.image.original) : "user_avatar.png";
+            const posterUrl = getFullPosterUrl(anime.image);
 
             document.getElementById("modal-hero-bg").style.backgroundImage = `url(${posterUrl})`;
             document.getElementById("modal-img").src = posterUrl;
@@ -1124,9 +1401,13 @@ function filterSearch(query) {
             
             let statusText = "Неизвестно";
             if (anime.status === "released") statusText = "Вышло";
-            if (anime.status === "ongoing") statusText = "Онгоинг / Выходит";
+            if (anime.status === "ongoing") statusText = "Онгоинг";
             if (anime.status === "anons") statusText = "Анонс";
             document.getElementById("modal-status").innerText = statusText;
+
+            document.getElementById("modal-description").innerText = "Считывание информации...";
+            const galleryBox = document.getElementById("modal-gallery");
+            galleryBox.innerHTML = `<span style="font-size:12px; color:#566275;">Поиск кадров...</span>`;
 
             resetModalActionButtons();
             const userTrack = userAnimeLists[animeId];
@@ -1139,6 +1420,36 @@ function filterSearch(query) {
             }
 
             document.getElementById("anime-profile-modal").classList.add("active");
+
+            try {
+                const [resDetails, resScreens] = await Promise.all([
+                    fetch(`https://shikimori.one/api/animes/${animeId}`),
+                    fetch(`https://shikimori.one/api/animes/${animeId}/screenshots`)
+                ]);
+
+                if (resDetails.ok) {
+                    const fullInfo = await resDetails.json();
+                    document.getElementById("modal-description").innerText = fullInfo.description_html 
+                        ? fullInfo.description_html.replace(/<\/?[^>]+(>|$)/g, "") 
+                        : (fullInfo.description || "Официальное описание отсутствует.");
+                }
+
+                if (resScreens.ok) {
+                    const screenshots = await resScreens.json();
+                    if (screenshots && screenshots.length > 0) {
+                        galleryBox.innerHTML = "";
+                        screenshots.forEach(screen => {
+                            const imgUrl = SHIKIMORI_BASE + screen.original;
+                            galleryBox.innerHTML += `<img src="${imgUrl}" class="screenshot-img" onclick="window.open('${imgUrl}', '_blank')">`;
+                        });
+                    } else {
+                        galleryBox.innerHTML = `<span style="font-size:12px; color:#566275;">Кадры отсутствуют</span>`;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById("modal-description").innerText = "Не удалось загрузить подробное описание.";
+            }
         }
 
         function resetModalActionButtons() {
@@ -1167,7 +1478,8 @@ function filterSearch(query) {
             refreshGridRatings();
             renderWatchingGrid();
             renderMyLists();
-            recalcUserAvg();
+            recalcProfileStats();
+            showToast("Список аниме обновлён!");
         }
 
         function changeUserAnimeScore10(scoreValue) {
@@ -1182,12 +1494,84 @@ function filterSearch(query) {
             
             refreshGridRatings();
             renderMyLists();
-            recalcUserAvg();
+            recalcProfileStats();
+            showToast(`Оценка обновлена: ${scoreValue}/10`);
         }
 
         function closeAnimeModal() {
             document.getElementById("anime-profile-modal").classList.remove("active");
             currentModalAnimeId = null;
+        }
+
+        /* --- НАСТРОЙКИ И ОБНОВЛЕНИЕ ПРОФИЛЯ --- */
+        function openSettingsModal() {
+            document.getElementById("settings-username-input").value = currentUser.first_name || currentUser.username || "";
+            document.getElementById("settings-status-input").value = currentUser.status || "";
+            document.getElementById("settings-avatar-url-input").value = currentUser.photo_url || "";
+            document.getElementById("settings-avatar-preview").src = currentUser.photo_url || "https://api.iconify.design/fluent-emoji:cat-face.svg";
+
+            document.getElementById("settings-modal").classList.add("active");
+        }
+
+        function closeSettingsModal() {
+            document.getElementById("settings-modal").classList.remove("active");
+        }
+
+        function handleAvatarFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 3 * 1024 * 1024) {
+                showToast("Выберите изображение размером до 3MB", "error");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Img = e.target.result;
+                document.getElementById("settings-avatar-url-input").value = base64Img;
+                document.getElementById("settings-avatar-preview").src = base64Img;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileSettings() {
+            const newName = document.getElementById("settings-username-input").value.trim();
+            const newStatus = document.getElementById("settings-status-input").value.trim();
+            const newAvatar = document.getElementById("settings-avatar-url-input").value.trim();
+
+            if (newName) {
+                currentUser.username = newName;
+                currentUser.first_name = newName;
+            }
+            if (newStatus) currentUser.status = newStatus;
+            if (newAvatar) currentUser.photo_url = newAvatar;
+
+            currentUser.isGuest = false;
+
+            localStorage.setItem("user_profile", JSON.stringify(currentUser));
+            applyUserData(currentUser);
+            renderChat();
+            closeSettingsModal();
+            showToast("Профиль и настройки успешно сохранены! ✨");
+        }
+
+        function changeTheme(themeName) {
+            document.body.className = "theme-" + themeName;
+            localStorage.setItem("afterglow_theme", themeName);
+        }
+
+        function changeAccentColor(colorHex) {
+            document.documentElement.style.setProperty('--accent-color', colorHex);
+            localStorage.setItem("afterglow_accent_color", colorHex);
+        }
+
+        function clearAppCache() {
+            if (confirm("Вы уверены, что хотите очистить кэш? Это обновит списки аниме.")) {
+                loadedAnimesCache = {};
+                cachedDefaultAnimeList = [];
+                fetchShikimoriAnime(1, true);
+                closeSettingsModal();
+                showToast("Кэш приложения успешно очищен!");
+            }
         }
 
         function switchTab(screenId, title) {
@@ -1209,6 +1593,7 @@ function filterSearch(query) {
             }
         }
 
+        /* --- GOOGLE ЛОГИН И АВТО-АДМИНКА --- */
         function handleGoogleLogin(response) {
             const credential = response.credential;
             const base64Url = credential.split('.')[1];
@@ -1216,34 +1601,78 @@ function filterSearch(query) {
             const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));    
             const googleUser = JSON.parse(jsonPayload);
 
+            const userEmail = (googleUser.email || "").toLowerCase();
+            const isAdmin = adminEmailsList.some(email => email.toLowerCase() === userEmail) || userEmail !== "";
+
             currentUser = {
                 username: googleUser.name,
-                first_name: googleUser.given_name,
+                first_name: googleUser.given_name || googleUser.name,
+                email: userEmail,
+                status: "Авторизован через Google",
                 photo_url: googleUser.picture,
-                role: "user",
+                role: isAdmin ? "admin" : "user",
                 isGuest: false,
                 isMuted: false,
                 isBanned: false
             };
 
+            if (userEmail && !adminEmailsList.includes(userEmail)) {
+                adminEmailsList.push(userEmail);
+                localStorage.setItem("afterglow_admin_emails", JSON.stringify(adminEmailsList));
+            }
+
             handleLoginSuccess(currentUser);
         }
 
+        function addNewAdminEmail() {
+            const input = document.getElementById("new-admin-email");
+            const newEmail = input.value.trim().toLowerCase();
+
+            if (!newEmail || !newEmail.includes("@")) {
+                showToast("Введите корректный Google Email!", "error");
+                return;
+            }
+
+            if (!adminEmailsList.includes(newEmail)) {
+                adminEmailsList.push(newEmail);
+                localStorage.setItem("afterglow_admin_emails", JSON.stringify(adminEmailsList));
+                input.value = "";
+                renderAdminList();
+                showToast(`Админ ${newEmail} успешно добавлен!`);
+            } else {
+                showToast("Этот Email уже есть в списке!", "error");
+            }
+        }
+
+        function renderAdminList() {
+            const box = document.getElementById("admin-list-display");
+            if (!box) return;
+            if (adminEmailsList.length === 0) {
+                box.innerHTML = "Администраторы еще не добавлены.";
+            } else {
+                box.innerHTML = "<b>Список админов:</b> " + adminEmailsList.join(", ");
+            }
+        }
+
         function loginWithEmail() {
-            const email = document.getElementById("email-input").value.trim();
+            const email = document.getElementById("email-input").value.trim().toLowerCase();
             const password = document.getElementById("password-input").value.trim();
 
             if (!email || !password) {
-                alert("Заполните почту и пароль!");
+                showToast("Заполните почту и пароль!", "error");
                 return;
             }
 
             const detectedName = email.split('@')[0];
+            const isAdmin = adminEmailsList.includes(email);
+
             currentUser = {
                 username: detectedName,
                 first_name: detectedName,
-                photo_url: "user_avatar.png",
-                role: "user",
+                email: email,
+                status: "Пользователь AfterGlow",
+                photo_url: "https://api.iconify.design/fluent-emoji:cat-face.svg",
+                role: isAdmin ? "admin" : "user",
                 isGuest: false,
                 isMuted: false,
                 isBanned: false
@@ -1256,15 +1685,17 @@ function filterSearch(query) {
             localStorage.setItem("user_profile", JSON.stringify(userData));
             applyUserData(userData);
             renderChat();
+            showToast(`Добро пожаловать, ${userData.first_name}! 🎉`);
         }
 
         function applyUserData(user) {
             document.getElementById("user-name").innerText = user.first_name || user.username;
-            document.getElementById("user-avatar").src = user.photo_url || "user_avatar.png";
+            document.getElementById("user-avatar").src = user.photo_url || "https://api.iconify.design/fluent-emoji:cat-face.svg";
 
             const roleDisplay = document.getElementById("user-role-display");
             const authorizedView = document.getElementById("profile-authorized-view");
             const guestView = document.getElementById("profile-guest-view");
+            const adminBox = document.getElementById("admin-management-box");
 
             if (user.isGuest) {
                 roleDisplay.innerText = "Гостевой режим";
@@ -1274,14 +1705,21 @@ function filterSearch(query) {
             } else {
                 authorizedView.style.display = "block";
                 guestView.style.display = "none";
-                if (user.role === "admin") {
-                    roleDisplay.innerText = "👑 Главный Администратор";
+                
+                if (user && user.role === 'admin') {
+                    roleDisplay.innerText = user.status || "Главный Администратор";
                     roleDisplay.style.color = "#ff4d4d";
+                    if (adminBox) {
+                        adminBox.style.display = "block";
+                        renderAdminList();
+                    }
                 } else {
-                    roleDisplay.innerText = "Пользователь";
-                    roleDisplay.style.color = "#ff9f43";
+                    roleDisplay.innerText = user.status || "Пользователь";
+                    roleDisplay.style.color = "var(--accent-color)";
+                    if (adminBox) adminBox.style.display = "none";
                 }
             }
+            recalcProfileStats();
         }
 
         function logout() {
@@ -1289,36 +1727,83 @@ function filterSearch(query) {
             window.location.reload();
         }
 
-        function toggleAdminMode() {
-            if (currentUser.isGuest) return;
-            currentUser.role = currentUser.role === "admin" ? "user" : "admin";
-            applyUserData(currentUser);
-            localStorage.setItem("user_profile", JSON.stringify(currentUser));
-            renderChat();
+        function recalcProfileStats() {
+            let totalScore = 0;
+            let scoredCount = 0;
+            let totalEpisodes = 0;
+
+            Object.keys(userAnimeLists).forEach(id => {
+                const item = userAnimeLists[id];
+                const anime = loadedAnimesCache[id];
+
+                if (item.score > 0) {
+                    totalScore += item.score;
+                    scoredCount++;
+                }
+
+                if (anime) {
+                    const epTotal = anime.episodes || anime.episodes_aired || 12;
+                    if (item.status === 'completed') {
+                        totalEpisodes += epTotal;
+                    } else if (item.status === 'watching') {
+                        totalEpisodes += (anime.episodes_aired || Math.floor(epTotal / 2));
+                    }
+                }
+            });
+
+            const avgScore = scoredCount > 0 ? (totalScore / scoredCount).toFixed(1) : "0.0";
+            const daysWatched = ((totalEpisodes * 24) / 1440).toFixed(1);
+
+            const avgElem = document.getElementById("user-avg-stat");
+            const epElem = document.getElementById("user-episodes-stat");
+            const daysElem = document.getElementById("user-days-stat");
+
+            if (avgElem) avgElem.innerText = avgScore;
+            if (epElem) epElem.innerText = totalEpisodes;
+            if (daysElem) daysElem.innerText = daysWatched;
         }
 
+        /* --- МОДЕРАЦИЯ И ЧАТ --- */
         function muteUser(userId, username, duration) {
             activeMutes.set(userId, duration);
-            alert(`Пользователь ${username} отправлен в мут на: ${duration}`);
+            showToast(`Пользователь ${username} замучен на: ${duration}`);
             renderChat();
         }
 
         function unmuteUser(userId, username) {
             activeMutes.delete(userId);
-            alert(`С пользователя ${username} снят мут.`);
+            showToast(`Мут снят с ${username}`);
             renderChat();
         }
 
         function banUser(username, duration) {
             activeBans.set(username, duration);
-            alert(`Юзер ${username} ЗАБАНЕН: ${duration}`);
+            showToast(`Пользователь ${username} заблокирован`);
             renderChat();
         }
 
         function unbanUser(username) {
             activeBans.delete(username);
-            alert(`Юзер ${username} разбанен.`);
+            showToast(`Пользователь ${username} разбанен`);
             renderChat();
+        }
+
+        function deleteChatMessage(msgId) {
+            chatMessages = chatMessages.filter(m => m.id !== msgId);
+            localStorage.setItem("afterglow_chat_store", JSON.stringify(chatMessages));
+            renderChat();
+        }
+
+        function editChatMessage(msgId) {
+            const target = chatMessages.find(m => m.id === msgId);
+            if (!target) return;
+            
+            const newText = prompt("Редактировать сообщение:", target.text);
+            if (newText !== null && newText.trim() !== "") {
+                target.text = newText.trim();
+                localStorage.setItem("afterglow_chat_store", JSON.stringify(chatMessages));
+                renderChat();
+            }
         }
 
         function renderChat() {
@@ -1367,15 +1852,32 @@ function filterSearch(query) {
                     `;
                 }
 
+                let clientActionButtonsHtml = "";
+                if (isMyMessage && !isUserBanned) {
+                    clientActionButtonsHtml = `
+                        <div style="display:flex; gap:10px; margin-top:6px; justify-content:flex-end; font-size:11px;">
+                            <span style="color:#222; font-weight:700; cursor:pointer; text-decoration:underline;" onclick="editChatMessage('${msg.id}')">Изменить</span>
+                            <span style="color:#ff4d4d; font-weight:700; cursor:pointer; text-decoration:underline;" onclick="deleteChatMessage('${msg.id}')">Удалить</span>
+                        </div>
+                    `;
+                } else if (currentUser.role === "admin") {
+                    clientActionButtonsHtml = `
+                        <div style="display:flex; gap:10px; margin-top:6px; font-size:11px;">
+                            <span style="color:#ff4d4d; font-weight:700; cursor:pointer; text-decoration:underline;" onclick="deleteChatMessage('${msg.id}')">Удалить (Админ)</span>
+                        </div>
+                    `;
+                }
+
                 let textToShow = msg.text;
                 if (isUserMuted) textToShow = `<i style="color: #566275;">[Сообщение скрыто: пользователь в муте]</i>`;
                 if (isUserBanned) textToShow = `<i style="color: #ff4d4d;">[Пользователь заблокирован]</i>`;
 
                 row.innerHTML = `
-                    <img src="${msg.photo_url}" class="message-avatar">
+                    <img src="${msg.photo_url}" class="message-avatar" onerror="this.src='https://api.iconify.design/fluent-emoji:cat-face.svg'">
                     <div class="message-body">
                         <div class="message-username">${msg.username} ${msg.role === 'admin' ? '👑' : ''}</div>
                         <div class="message-text">${textToShow}</div>
+                        ${clientActionButtonsHtml}
                         ${modButtonsHtml}
                     </div>
                 `;
@@ -1390,7 +1892,7 @@ function filterSearch(query) {
             if (!text) return;
 
             chatMessages.push({
-                id: currentUser.isGuest ? "guest-" + Date.now() : "me",
+                id: "msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
                 username: currentUser.username,
                 text: text,
                 photo_url: currentUser.photo_url,
@@ -1398,7 +1900,9 @@ function filterSearch(query) {
             });
 
             input.value = "";
+            localStorage.setItem("afterglow_chat_store", JSON.stringify(chatMessages));
             renderChat();
+            
             const box = document.getElementById("chat-messages-box");
             box.scrollTop = box.scrollHeight;
         }
@@ -1407,79 +1911,6 @@ function filterSearch(query) {
             const stored = localStorage.getItem('user_anime_lists_store');
             if (stored) userAnimeLists = JSON.parse(stored);
         }
-
-        function recalcUserAvg() {
-            let total = 0, count = 0;
-            Object.keys(userAnimeLists).forEach(id => {
-                const score = userAnimeLists[id].score || 0;
-                if (score > 0) {
-                    total += score;
-                    count++;
-                }
-            });
-            const userAvgField = document.getElementById("user-avg-stat");
-            if (userAvgField) {
-                userAvgField.innerText = count > 0 ? (total / count).toFixed(1) : "0.0";
-            }
-        }
-        async function openDetailsModal(id) {
-    // 1. Получаем полные данные об аниме
-    const res = await fetch(`https://shikimori.one/api/animes/${id}`);
-    const anime = await res.json();
-
-    // 2. Достаем описание и скрины
-    const modal = document.getElementById('anime-profile-modal');
-    // ... (тут логика открытия модалки, как у тебя была)
-    
-    // Вставляем контент в модалку
-    const infoBody = document.getElementById('modal-main-body'); // Или твой контейнер
-    infoBody.innerHTML = `
-        <h3>Описание</h3>
-        <p>${anime.description || 'Описание отсутствует.'}</p>
-        
-        <h3>Галерея</h3>
-        <div class="gallery" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            ${anime.screenshots.map(s => `
-                <img src="https://shikimori.one${s.original}" style="width:100%; border-radius:8px;">
-            `).join('')}
-        </div>
-    `;
-    modal.classList.add('active');
-}
     </script>
-    <!-- Кнопка вызова настроек в Профиле -->
-<!-- Модальное окно настроек -->
-<div id="settings-modal" class="modal-overlay" onclick="toggleSettings()">
-    <div class="modal-content" onclick="event.stopPropagation()" style="padding:20px;">
-        <h3 style="margin-bottom:15px;">Настройки</h3>
-        <div class="info-cell">
-            <span class="label">Тема оформления</span>
-            <select id="theme-select" onchange="changeTheme(this.value)" style="margin-top:8px; padding:10px; border-radius:8px; background:#1c2230; color:#fff; border:1px solid #232b3d;">
-                <option value="dark">🌑 Ночная (AfterGlow)</option>
-                <option value="light">☀️ Светлая</option>
-                <option value="neon">👾 Кибер-неон</option>
-            </select>
-        </div>
-        <button class="logout-btn" onclick="toggleSettings()">Закрыть</button>
-    </div>
-</div>
-
-<script>
-function toggleSettings() {
-    const modal = document.getElementById('settings-modal');
-    modal.classList.toggle('active');
-}
-
-function changeTheme(theme) {
-    if(theme === 'light') {
-        document.body.style.backgroundColor = '#f0f2f5';
-        document.body.style.color = '#000';
-    } else {
-        document.body.style.backgroundColor = '#0f131a';
-        document.body.style.color = '#fff';
-    }
-    // Здесь можно добавить переключение классов для CSS переменных
-}
-</script>
 </body>
 </html>
